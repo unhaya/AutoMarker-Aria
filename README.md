@@ -1,53 +1,44 @@
 # AutoMarker Aria
 
-**AI builds your search strategy before you search.**
+**Pre-Search Intelligence. Tiered highlighting engine.**
 
-Enter a topic. AI instantly generates keywords to find, noise to exclude, and executes an optimized Google search—all in one click.
+Google is no longer a search engine—it's a shopping mall. Aria is a browser-side surgical blade designed to bypass SEO noise and execute high-purity research.
 
-> **Cost:** ~$0.0003 per search. **100 searches = ~$0.03 (less than 5 yen).** Gemini free tier also available.
-
-<!--
-TODO: Add demo GIF here
-![Demo](docs/demo.gif)
--->
+> **Cost:** ~$0.03 per 100 searches. Gemini free tier available.
 
 ---
 
-## The Core Problem
+## The Problem
 
-Google is broken for serious research.
+Search "ergonomics" and you get Amazon chairs, Rakuten desks, affiliate blogs, job listings. Page after page of commercial recommendations masquerading as information retrieval.
 
-Search "ergonomics" and you get:
-- **Page 1:** Amazon chairs, Rakuten desks, shopping ads
-- **Page 2:** More products, affiliate blogs, job listings
-- **Page 3:** Finally, maybe some actual content
-
-You wanted research. You got a shopping mall.
+The signal-to-noise ratio of modern search is broken.
 
 ---
 
-## What Aria Does
+## The Design: Pre-Search Intelligence
 
-**1. AI Strategy (the main feature)**
+Most tools analyze the page *after* you land. Aria builds the strategy *before* you search.
 
-You type a topic. AI thinks:
-> "What does someone searching 'ergonomics' actually want? Academic papers? Workplace guidelines? What noise will pollute results?"
+The AI (Claude/OpenAI/Gemini) acts as a Strategy Consultant to define:
 
-Then generates:
-- **8 keywords** to find (theme, synonyms, quality signals)
-- **5+ exclusions** to remove (-Amazon -楽天 -chair -desk -job)
-- **Optimized query** that executes automatically
+| Layer | Purpose | Example |
+|-------|---------|---------|
+| **L1 (Yellow)** | The Core — non-negotiable essence | 人間工学, ergonomics |
+| **L2 (Pink)** | The Evidence — terms in quality content | 効果, 研究, analysis |
+| **L3 (Purple)** | The Signals — contextual markers | 事例, expert, データ |
+| **L4 (Green)** | The Related — conceptual expansion | 生産性, workplace |
+| **Negatives** | The Noise — intentional exclusion | -Amazon -楽天 -chair -job |
 
-**2. Visual Highlighting**
+This is not random highlighting. It's a 4-tier information architecture applied to search results.
 
-On the search results page:
-- Core concepts → Yellow
-- Evidence/practical terms → Pink
-- Quality signals → Purple
-- Related concepts → Green
-- Commercial noise → ~~Strikethrough~~
+---
 
-**Result:** One click. Clean results. Important words jump out.
+## Why This Exists
+
+Humanity needs 20% of information to make 100% of decisions. The remaining 80% is cognitive debt.
+
+Aria cancels that debt.
 
 ---
 
