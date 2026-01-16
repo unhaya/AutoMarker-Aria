@@ -2,6 +2,10 @@
 
 Chrome extension. Keyword highlighter for search results with AI-powered search strategy generation.
 
+## Demo
+
+https://github.com/unhaya/AutoMarker-Aria/releases/download/v1.0.0/demo.mp4
+
 ## What It Does
 
 Search "ergonomics" and you get Amazon chairs, Rakuten desks, job listings. Page after page of noise.
