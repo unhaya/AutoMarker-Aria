@@ -1,0 +1,11 @@
+/* AutoMarker Aria - Highlight Styles */
+
+.automarker-highlight {
+  border-radius: 2px;
+  padding: 0 1px;
+  transition: background-color 0.2s ease;
+}
+
+.automarker-highlight:hover {
+  outline: 1px solid rgba(0, 0, 0, 0.2);
+}

@@ -1,0 +1,246 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+  <meta charset="UTF-8">
+  <title>AutoMarker Aria - Settings</title>
+  <style>
+    * {
+      margin: 0;
+      padding: 0;
+      box-sizing: border-box;
+    }
+
+    body {
+      font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif;
+      background: #0f0f1a;
+      color: #eee;
+      min-height: 100vh;
+      padding: 40px;
+    }
+
+    .container {
+      max-width: 500px;
+      margin: 0 auto;
+    }
+
+    h1 {
+      font-size: 24px;
+      margin-bottom: 8px;
+    }
+
+    .subtitle {
+      color: #666;
+      font-size: 14px;
+      margin-bottom: 32px;
+    }
+
+    .section {
+      background: #1a1a2e;
+      border-radius: 12px;
+      padding: 24px;
+      margin-bottom: 20px;
+    }
+
+    .section-title {
+      font-size: 14px;
+      font-weight: 600;
+      color: #888;
+      text-transform: uppercase;
+      letter-spacing: 0.5px;
+      margin-bottom: 16px;
+    }
+
+    .form-group {
+      margin-bottom: 16px;
+    }
+
+    label {
+      display: block;
+      font-size: 13px;
+      color: #aaa;
+      margin-bottom: 6px;
+    }
+
+    select, input[type="text"], input[type="password"] {
+      width: 100%;
+      padding: 12px;
+      background: #252540;
+      border: 1px solid #333;
+      border-radius: 8px;
+      color: #fff;
+      font-size: 14px;
+      outline: none;
+      transition: border-color 0.2s;
+    }
+
+    select:focus, input:focus {
+      border-color: #4dabf7;
+    }
+
+    select {
+      cursor: pointer;
+    }
+
+    .provider-cards {
+      display: flex;
+      gap: 12px;
+      margin-bottom: 20px;
+    }
+
+    .provider-card {
+      flex: 1;
+      padding: 16px 12px;
+      background: #252540;
+      border: 2px solid transparent;
+      border-radius: 10px;
+      cursor: pointer;
+      text-align: center;
+      transition: all 0.2s;
+    }
+
+    .provider-card:hover {
+      background: #2a2a4a;
+    }
+
+    .provider-card.selected {
+      border-color: #4dabf7;
+      background: #2a2a4a;
+    }
+
+    .provider-card input {
+      display: none;
+    }
+
+    .provider-icon {
+      font-size: 28px;
+      margin-bottom: 8px;
+    }
+
+    .provider-name {
+      font-size: 13px;
+      font-weight: 500;
+    }
+
+    .btn {
+      padding: 12px 24px;
+      border: none;
+      border-radius: 8px;
+      font-size: 14px;
+      font-weight: 500;
+      cursor: pointer;
+      transition: all 0.2s;
+    }
+
+    .btn-primary {
+      background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+      color: #fff;
+    }
+
+    .btn-primary:hover {
+      transform: translateY(-1px);
+      box-shadow: 0 4px 12px rgba(102, 126, 234, 0.4);
+    }
+
+    .btn-secondary {
+      background: #333;
+      color: #888;
+      margin-left: 12px;
+    }
+
+    .btn-secondary:hover {
+      background: #444;
+      color: #fff;
+    }
+
+    .actions {
+      display: flex;
+      justify-content: flex-end;
+      margin-top: 24px;
+    }
+
+    .status {
+      padding: 12px 16px;
+      border-radius: 8px;
+      font-size: 13px;
+      margin-top: 16px;
+      display: none;
+    }
+
+    .status.success {
+      display: block;
+      background: rgba(82, 196, 26, 0.15);
+      color: #52c41a;
+      border: 1px solid rgba(82, 196, 26, 0.3);
+    }
+
+    .status.error {
+      display: block;
+      background: rgba(255, 77, 79, 0.15);
+      color: #ff4d4f;
+      border: 1px solid rgba(255, 77, 79, 0.3);
+    }
+
+    .help-text {
+      font-size: 11px;
+      color: #555;
+      margin-top: 6px;
+    }
+
+    .model-select {
+      margin-top: 16px;
+    }
+  </style>
+</head>
+<body>
+  <div class="container">
+    <h1>AutoMarker Aria</h1>
+    <p class="subtitle">AI Configuration (Optional)</p>
+
+    <div class="section">
+      <div class="section-title">AI Provider</div>
+
+      <div class="provider-cards">
+        <label class="provider-card" data-provider="claude">
+          <input type="radio" name="provider" value="claude">
+          <div class="provider-icon">🟣</div>
+          <div class="provider-name">Claude</div>
+        </label>
+
+        <label class="provider-card" data-provider="openai">
+          <input type="radio" name="provider" value="openai">
+          <div class="provider-icon">🟢</div>
+          <div class="provider-name">ChatGPT</div>
+        </label>
+
+        <label class="provider-card" data-provider="gemini">
+          <input type="radio" name="provider" value="gemini">
+          <div class="provider-icon">🔵</div>
+          <div class="provider-name">Gemini</div>
+        </label>
+      </div>
+
+      <div class="form-group">
+        <label for="apiKey">API Key</label>
+        <input type="password" id="apiKey" placeholder="Enter your API key">
+        <p class="help-text">Your API key is stored locally and never sent to any server except the selected AI provider.</p>
+      </div>
+
+      <div class="form-group model-select">
+        <label for="model">Model</label>
+        <select id="model">
+          <option value="">Select a model</option>
+        </select>
+      </div>
+    </div>
+
+    <div class="actions">
+      <button class="btn btn-secondary" id="clearBtn">Clear</button>
+      <button class="btn btn-primary" id="saveBtn">Save Settings</button>
+    </div>
+
+    <div class="status" id="status"></div>
+  </div>
+
+  <script src="options.js"></script>
+</body>
+</html>

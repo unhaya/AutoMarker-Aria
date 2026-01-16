@@ -1,0 +1,105 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+  <meta charset="UTF-8">
+  <link rel="stylesheet" href="popup.css">
+</head>
+<body>
+  <div class="container">
+    <header>
+      <div class="title-row">
+        <h1>AutoMarker</h1>
+        <label class="master-toggle" title="Auto-highlight on search">
+          <input type="checkbox" id="masterToggle" checked>
+          <span class="toggle-slider"></span>
+        </label>
+      </div>
+    </header>
+
+    <!-- AI Build Section -->
+    <div class="ai-build-section">
+      <input type="text" id="themeInput" class="theme-input" placeholder="Enter theme (e.g. Ergonomics)">
+      <button id="aiBuildBtn" class="ai-build-btn" disabled>
+        <span class="btn-text">AI Build</span>
+        <span class="btn-loader hidden"></span>
+      </button>
+    </div>
+
+    <!-- 4 Main Slots -->
+    <div class="slots">
+      <div class="slot" data-index="0" data-level="1">
+        <span class="level-tag">L1</span>
+        <input type="color" class="color-picker" value="#ffee58">
+        <input type="text" class="keyword-input" placeholder="Core keyword">
+        <button class="clear-btn" title="Clear">×</button>
+      </div>
+      <div class="slot" data-index="1" data-level="1">
+        <span class="level-tag">L1</span>
+        <input type="color" class="color-picker" value="#ffee58">
+        <input type="text" class="keyword-input" placeholder="Core keyword">
+        <button class="clear-btn" title="Clear">×</button>
+      </div>
+      <div class="slot" data-index="2" data-level="2">
+        <span class="level-tag">L2</span>
+        <input type="color" class="color-picker" value="#f48fb1">
+        <input type="text" class="keyword-input" placeholder="Evidence">
+        <button class="clear-btn" title="Clear">×</button>
+      </div>
+      <div class="slot" data-index="3" data-level="2">
+        <span class="level-tag">L2</span>
+        <input type="color" class="color-picker" value="#f48fb1">
+        <input type="text" class="keyword-input" placeholder="Evidence">
+        <button class="clear-btn" title="Clear">×</button>
+      </div>
+    </div>
+
+    <!-- Extended Slots (hidden by default) -->
+    <button id="showMore" class="more-btn">+ More (L3-L4)</button>
+    <div class="slots extended hidden">
+      <div class="slot" data-index="4" data-level="3">
+        <span class="level-tag">L3</span>
+        <input type="color" class="color-picker" value="#b39ddb">
+        <input type="text" class="keyword-input" placeholder="Context">
+        <button class="clear-btn" title="Clear">×</button>
+      </div>
+      <div class="slot" data-index="5" data-level="3">
+        <span class="level-tag">L3</span>
+        <input type="color" class="color-picker" value="#b39ddb">
+        <input type="text" class="keyword-input" placeholder="Context">
+        <button class="clear-btn" title="Clear">×</button>
+      </div>
+      <div class="slot" data-index="6" data-level="4">
+        <span class="level-tag">L4</span>
+        <input type="color" class="color-picker" value="#a5d6a7">
+        <input type="text" class="keyword-input" placeholder="Related">
+        <button class="clear-btn" title="Clear">×</button>
+      </div>
+      <div class="slot" data-index="7" data-level="4">
+        <span class="level-tag">L4</span>
+        <input type="color" class="color-picker" value="#a5d6a7">
+        <input type="text" class="keyword-input" placeholder="Related">
+        <button class="clear-btn" title="Clear">×</button>
+      </div>
+    </div>
+
+    <!-- Negatives Section -->
+    <div class="negatives-section hidden" id="negativesSection">
+      <span class="negatives-label">Exclude:</span>
+      <span class="negatives-list" id="negativesList"></span>
+    </div>
+
+    <!-- Actions -->
+    <div class="actions">
+      <button id="clearAll" class="secondary-btn">Clear</button>
+      <button id="openSettings" class="icon-btn" title="Settings">⚙</button>
+    </div>
+
+    <!-- Status -->
+    <div class="status-bar">
+      <span id="matchCount">Ready</span>
+    </div>
+  </div>
+
+  <script src="popup.js"></script>
+</body>
+</html>
