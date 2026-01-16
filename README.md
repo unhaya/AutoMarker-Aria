@@ -4,7 +4,7 @@ Chrome extension. Keyword highlighter for search results with AI-powered search 
 
 ## Demo
 
-https://github.com/unhaya/AutoMarker-Aria/releases/download/v1.0.0/demo.mp4
+https://github.com/user-attachments/assets/fb6a90f3-45d1-4468-a895-e876f8944121
 
 ## What It Does
 
