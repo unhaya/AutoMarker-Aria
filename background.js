@@ -89,14 +89,14 @@ async function triggerHighlight(tabId, slots, negatives = []) {
         files: ['content.css']
       });
 
-      // Retry after injection
+      // Retry after injection with longer delay for dynamic pages
       setTimeout(async () => {
         try {
           await chrome.tabs.sendMessage(tabId, messageData);
         } catch (e) {
           // Still failed, give up
         }
-      }, 100);
+      }, 500);
     } catch (e) {
       // Cannot inject (chrome:// pages, etc.)
     }

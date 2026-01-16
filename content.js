@@ -260,7 +260,10 @@
         currentNegatives = settings.negatives || [];
 
         if (currentSlots.length > 0 || currentNegatives.length > 0) {
-          setTimeout(() => highlightPage(), 100);
+          // Initial highlight with delay for page to render
+          setTimeout(() => highlightPage(), 500);
+          // Second pass for dynamic content (Google search results)
+          setTimeout(() => highlightPage(), 1500);
         }
       }
     } catch (e) {

@@ -245,7 +245,7 @@ class AutoMarkerPopup {
 
 Return ONLY valid JSON (no markdown, no explanation):
 {
-  "query": "optimized Google search query using natural keywords",
+  "query": "ergonomics workplace posture research -buy -sale -amazon -price",
   "slots": {
     "level1": ["core_keyword1", "core_keyword2"],
     "level2": ["evidence_keyword1", "evidence_keyword2"],
@@ -256,7 +256,7 @@ Return ONLY valid JSON (no markdown, no explanation):
 }
 
 Rules:
-- query: Natural keyword combination. DO NOT use "quotes" for exact phrases. DO use -minus to exclude noise (e.g., -sale -buy -price -amazon -shop)
+- query: MUST include -minus exclusions at the end (e.g., topic keywords -buy -sale -amazon -price -shop). Always add at least 3-5 minus exclusions.
 - level1: Core concepts that directly answer the query
 - level2: Evidence, data, methodology terms
 - level3: Technical/domain terms for context
