@@ -11,7 +11,7 @@ https://github.com/user-attachments/assets/fb6a90f3-45d1-4468-a895-e876f8944121
 Search "ergonomics" and you get Amazon chairs, Rakuten desks, job listings. Page after page of noise.
 
 This tool builds a strategy *before* you search:
-- Keywords to highlight (4-tier hierarchy)
+- Keywords to highlight (4-tier hierarchy, up to 8)
 - Noise to exclude (-Amazon -Rakuten -jobs etc.)
 
 Result: Search results filtered from EC sites and job listings, with important keywords color-coded.
