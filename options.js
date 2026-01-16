@@ -50,11 +50,12 @@ Step 2: What SPECIFIC noise will pollute "\${theme}" search results?
 - Tutorial/beginner content if user wants advanced info
 - Specific platforms that add noise (YouTube, TikTok, Pinterest)
 
-ALWAYS INCLUDE these EC/shopping site exclusions:
-- Japanese: -Amazon -楽天 -Yahoo!ショッピング -価格.com -通販
-- English: -Amazon -eBay -Walmart -shop -buy
+ALWAYS INCLUDE these EC/shopping site exclusions (without minus sign, just the word):
+- Japanese: Amazon, 楽天, Yahoo!ショッピング, 価格.com, 通販
+- English: Amazon, eBay, Walmart, shop, buy
 
-The goal: Remove EC noise + predict what SPECIFICALLY pollutes "\${theme}" results.`;
+The goal: Remove EC noise + predict what SPECIFICALLY pollutes "\${theme}" results.
+IMPORTANT: Return words WITHOUT minus signs. The system adds them automatically.`;
 
 class OptionsPage {
   constructor() {
