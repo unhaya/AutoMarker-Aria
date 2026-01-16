@@ -50,9 +50,13 @@ Settings (⚙) で API キーを設定:
 
 ## Cost
 
-- Claude Haiku: ~$0.0003/回
-- OpenAI GPT-4o Mini: ~$0.0002/回
-- Gemini Flash: 無料（15回/分）
+| Provider | 1回 | 100回 | 1000回 |
+|----------|-----|-------|--------|
+| Claude Haiku | $0.0003 | $0.03 | $0.30 |
+| OpenAI GPT-4o Mini | $0.0002 | $0.02 | $0.20 |
+| Gemini Flash | 無料 | 無料 | 無料 |
+
+Gemini は 15回/分の制限あり。
 
 ## License
 
