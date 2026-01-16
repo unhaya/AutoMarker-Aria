@@ -73,3 +73,5 @@ MIT
 ---
 
 *Search should be an intellectual act.*
+
+Demo uses [ClipboardTranslator](https://github.com/unhaya/ClipboardTranslator) for real-time translation.
