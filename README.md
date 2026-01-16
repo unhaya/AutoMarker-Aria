@@ -54,9 +54,9 @@ Custom prompt available in Advanced section.
 |----------|-----|-------|--------|
 | Claude Haiku | $0.0003 | $0.03 | $0.30 |
 | OpenAI GPT-4o Mini | $0.0002 | $0.02 | $0.20 |
-| Gemini Flash | Free | Free | Free |
+| Gemini Flash | Free tier | Free tier | Free tier |
 
-Gemini: 15 requests/min limit.
+Gemini: Free tier available (15 RPM, 1500 RPD limit).
 
 ## License
 
