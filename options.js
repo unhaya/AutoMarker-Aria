@@ -19,6 +19,43 @@ const MODELS = {
   ]
 };
 
+const DEFAULT_PROMPT = `You are an expert research strategist. Given the theme "\${theme}", create a precision search strategy.
+
+LANGUAGE RULE: Detect the theme's language and generate ALL output in that SAME language.
+
+Return ONLY valid JSON:
+{
+  "keywords": ["kw1", "kw2", "kw3", "kw4", "kw5", "kw6", "kw7", "kw8"],
+  "negatives": ["exclude1", "exclude2", "exclude3", "exclude4", "exclude5"]
+}
+
+KEYWORDS (8 total) - Choose words that ACTUALLY APPEAR in search results:
+- [0-1]: Main theme words + synonym (the words user typed + alternatives)
+- [2-3]: Practical terms people use when discussing this topic
+- [4-5]: Quality signals that appear in good content
+- [6-7]: Related concepts that expand the search
+
+NOTE: If theme contains multiple words, treat them as combined search intent.
+IMPORTANT: Avoid overly academic terms that rarely appear in web content.
+
+NEGATIVES (5 required) - THINK DEEPLY about this specific theme:
+
+Step 1: What does someone searching "\${theme}" ACTUALLY want?
+- Academic research? Technical documentation? Professional insights?
+
+Step 2: What SPECIFIC noise will pollute "\${theme}" search results?
+- Product categories that dominate results (furniture, gadgets, tools)
+- Adjacent but irrelevant fields that share terminology
+- Career/job content (job listings, salary, interview)
+- Tutorial/beginner content if user wants advanced info
+- Specific platforms that add noise (YouTube, TikTok, Pinterest)
+
+ALWAYS INCLUDE these EC/shopping site exclusions:
+- Japanese: -Amazon -楽天 -Yahoo!ショッピング -価格.com -通販
+- English: -Amazon -eBay -Walmart -shop -buy
+
+The goal: Remove EC noise + predict what SPECIFICALLY pollutes "\${theme}" results.`;
+
 class OptionsPage {
   constructor() {
     this.provider = null;
@@ -35,8 +72,10 @@ class OptionsPage {
     this.providerCards = document.querySelectorAll('.provider-card');
     this.apiKeyInput = document.getElementById('apiKey');
     this.modelSelect = document.getElementById('model');
+    this.customPromptInput = document.getElementById('customPrompt');
     this.saveBtn = document.getElementById('saveBtn');
     this.clearBtn = document.getElementById('clearBtn');
+    this.resetPromptBtn = document.getElementById('resetPromptBtn');
     this.status = document.getElementById('status');
   }
 
@@ -53,6 +92,9 @@ class OptionsPage {
 
     // Clear
     this.clearBtn.addEventListener('click', () => this.clear());
+
+    // Reset prompt
+    this.resetPromptBtn.addEventListener('click', () => this.resetPrompt());
   }
 
   selectProvider(provider) {
@@ -86,8 +128,9 @@ class OptionsPage {
   }
 
   async loadSettings() {
-    const data = await chrome.storage.local.get(['automarker_api']);
+    const data = await chrome.storage.local.get(['automarker_api', 'automarker_prompt']);
     const config = data.automarker_api;
+    const customPrompt = data.automarker_prompt;
 
     if (config) {
       if (config.provider) {
@@ -100,6 +143,9 @@ class OptionsPage {
         this.modelSelect.value = config.model;
       }
     }
+
+    // Load custom prompt or show default
+    this.customPromptInput.value = customPrompt || DEFAULT_PROMPT;
   }
 
   async save() {
@@ -119,16 +165,27 @@ class OptionsPage {
       return;
     }
 
+    // Save API config
     await chrome.storage.local.set({ automarker_api: config });
+
+    // Save custom prompt (only if different from default)
+    const customPrompt = this.customPromptInput.value.trim();
+    if (customPrompt && customPrompt !== DEFAULT_PROMPT) {
+      await chrome.storage.local.set({ automarker_prompt: customPrompt });
+    } else {
+      await chrome.storage.local.remove(['automarker_prompt']);
+    }
+
     this.showStatus('Settings saved successfully!', 'success');
   }
 
   async clear() {
-    await chrome.storage.local.remove(['automarker_api']);
+    await chrome.storage.local.remove(['automarker_api', 'automarker_prompt']);
 
     this.provider = null;
     this.apiKeyInput.value = '';
     this.modelSelect.innerHTML = '<option value="">Select a model</option>';
+    this.customPromptInput.value = DEFAULT_PROMPT;
 
     this.providerCards.forEach(card => {
       card.classList.remove('selected');
@@ -136,6 +193,11 @@ class OptionsPage {
     });
 
     this.showStatus('Settings cleared', 'success');
+  }
+
+  resetPrompt() {
+    this.customPromptInput.value = DEFAULT_PROMPT;
+    this.showStatus('Prompt reset to default', 'success');
   }
 
   showStatus(message, type) {
@@ -147,6 +209,9 @@ class OptionsPage {
     }, 3000);
   }
 }
+
+// Export default prompt for use in popup.js
+window.DEFAULT_PROMPT = DEFAULT_PROMPT;
 
 // Initialize
 document.addEventListener('DOMContentLoaded', () => {

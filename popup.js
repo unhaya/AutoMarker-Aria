@@ -202,27 +202,47 @@ class AutoMarkerPopup {
       const result = await this.callHaikuForStrategy(theme);
       console.log('AI Build result:', result);
 
-      if (result) {
-        // 1. Fill slots immediately
-        this.fillSlotsFromAI(result.slots);
+      if (result && result.keywords?.length > 0) {
+        const keywords = result.keywords.slice(0, 8);
+        const negatives = result.negatives || [];
+
+        // 1. Fill slots with keywords
+        this.fillSlotsFromKeywords(keywords);
 
         // 2. Store negatives
-        if (result.negatives?.length > 0) {
-          this.negatives = result.negatives;
+        if (negatives.length > 0) {
+          this.negatives = negatives;
           this.displayNegatives();
         }
 
-        // 3. Save settings
-        await this.saveSettings();
+        // 3. Save settings directly from AI result
+        const slotsToSave = [];
+        this.slots.forEach((slot, index) => {
+          slotsToSave.push({
+            keyword: keywords[index] || '',
+            color: slot.querySelector('.color-picker').value
+          });
+        });
 
-        // 4. Open search tab IMMEDIATELY (speed first!)
-        if (result.query) {
-          console.log('Opening search with query:', result.query);
-          const searchUrl = `https://www.google.com/search?q=${encodeURIComponent(result.query)}`;
-          chrome.tabs.create({ url: searchUrl });
-        } else {
-          console.warn('No query in AI result');
-        }
+        const settingsToSave = {
+          slots: slotsToSave,
+          enabled: true,
+          negatives: negatives
+        };
+
+        console.log('Saving AI Build settings:', settingsToSave);
+        await chrome.storage.local.set({ automarker_settings: settingsToSave });
+
+        // 4. Build search query: first 4 keywords + negatives
+        const queryKeywords = keywords.slice(0, 4);
+        const negativeTerms = negatives.map(n => `-${n}`);
+        const searchQuery = [...queryKeywords, ...negativeTerms].join(' ');
+
+        console.log('Search query:', searchQuery);
+
+        // 5. Open search tab
+        const searchUrl = `https://www.google.com/search?q=${encodeURIComponent(searchQuery)}`;
+        chrome.tabs.create({ url: searchUrl });
 
         this.matchCount.textContent = 'Strategy deployed!';
       } else {
@@ -241,27 +261,12 @@ class AutoMarkerPopup {
   async callHaikuForStrategy(theme) {
     const { provider, apiKey, model } = this.apiConfig;
 
-    const prompt = `You are a research strategist. Given the theme "${theme}", create a search strategy.
+    // Load custom prompt from storage, or use default
+    const data = await chrome.storage.local.get(['automarker_prompt']);
+    let promptTemplate = data.automarker_prompt || this.getDefaultPrompt();
 
-Return ONLY valid JSON (no markdown, no explanation):
-{
-  "query": "ergonomics workplace posture research -buy -sale -amazon -price",
-  "slots": {
-    "level1": ["core_keyword1", "core_keyword2"],
-    "level2": ["evidence_keyword1", "evidence_keyword2"],
-    "level3": ["context_keyword1", "context_keyword2"],
-    "level4": ["related_keyword1", "related_keyword2"]
-  },
-  "negatives": ["noise_word1", "noise_word2", "noise_word3"]
-}
-
-Rules:
-- query: MUST include -minus exclusions at the end (e.g., topic keywords -buy -sale -amazon -price -shop). Always add at least 3-5 minus exclusions.
-- level1: Core concepts that directly answer the query
-- level2: Evidence, data, methodology terms
-- level3: Technical/domain terms for context
-- level4: Related concepts for broader understanding
-- negatives: Words that indicate low-quality/commercial content to visually de-emphasize`;
+    // Replace ${theme} placeholder with actual theme
+    const prompt = promptTemplate.replace(/\$\{theme\}/g, theme);
 
     try {
       if (provider === 'claude') {
@@ -348,25 +353,18 @@ Rules:
     return null;
   }
 
-  fillSlotsFromAI(slotsData) {
-    if (!slotsData) return;
-
-    const allKeywords = [
-      ...(slotsData.level1 || []),
-      ...(slotsData.level2 || []),
-      ...(slotsData.level3 || []),
-      ...(slotsData.level4 || [])
-    ];
+  fillSlotsFromKeywords(keywords) {
+    if (!keywords || keywords.length === 0) return;
 
     // Show extended slots if we have more than 4 keywords
-    if (allKeywords.length > 4 && this.extendedSlots.classList.contains('hidden')) {
+    if (keywords.length > 4 && this.extendedSlots.classList.contains('hidden')) {
       this.extendedSlots.classList.remove('hidden');
       this.showMoreBtn.classList.add('active');
       this.showMoreBtn.textContent = '− Less';
     }
 
     // Fill slots
-    allKeywords.slice(0, 8).forEach((keyword, index) => {
+    keywords.slice(0, 8).forEach((keyword, index) => {
       if (this.slots[index]) {
         this.slots[index].querySelector('.keyword-input').value = keyword;
       }
@@ -383,6 +381,45 @@ Rules:
     this.negativesList.innerHTML = this.negatives
       .map(word => `<span class="negative-word">${word}</span>`)
       .join('');
+  }
+
+  getDefaultPrompt() {
+    return `You are an expert research strategist. Given the theme "\${theme}", create a precision search strategy.
+
+LANGUAGE RULE: Detect the theme's language and generate ALL output in that SAME language.
+
+Return ONLY valid JSON:
+{
+  "keywords": ["kw1", "kw2", "kw3", "kw4", "kw5", "kw6", "kw7", "kw8"],
+  "negatives": ["exclude1", "exclude2", "exclude3", "exclude4", "exclude5"]
+}
+
+KEYWORDS (8 total) - Choose words that ACTUALLY APPEAR in search results:
+- [0-1]: Main theme words + synonym (the words user typed + alternatives)
+- [2-3]: Practical terms people use when discussing this topic
+- [4-5]: Quality signals that appear in good content
+- [6-7]: Related concepts that expand the search
+
+NOTE: If theme contains multiple words, treat them as combined search intent.
+IMPORTANT: Avoid overly academic terms that rarely appear in web content.
+
+NEGATIVES (5 required) - THINK DEEPLY about this specific theme:
+
+Step 1: What does someone searching "\${theme}" ACTUALLY want?
+- Academic research? Technical documentation? Professional insights?
+
+Step 2: What SPECIFIC noise will pollute "\${theme}" search results?
+- Product categories that dominate results (furniture, gadgets, tools)
+- Adjacent but irrelevant fields that share terminology
+- Career/job content (job listings, salary, interview)
+- Tutorial/beginner content if user wants advanced info
+- Specific platforms that add noise (YouTube, TikTok, Pinterest)
+
+ALWAYS INCLUDE these EC/shopping site exclusions:
+- Japanese: -Amazon -楽天 -Yahoo!ショッピング -価格.com -通販
+- English: -Amazon -eBay -Walmart -shop -buy
+
+The goal: Remove EC noise + predict what SPECIFICALLY pollutes "\${theme}" results.`;
   }
 }
 

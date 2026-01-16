@@ -61,7 +61,7 @@
       margin-bottom: 6px;
     }
 
-    select, input[type="text"], input[type="password"] {
+    select, input[type="text"], input[type="password"], textarea {
       width: 100%;
       padding: 12px;
       background: #252540;
@@ -73,7 +73,15 @@
       transition: border-color 0.2s;
     }
 
-    select:focus, input:focus {
+    textarea {
+      font-family: 'Monaco', 'Menlo', 'Consolas', monospace;
+      font-size: 12px;
+      line-height: 1.5;
+      resize: vertical;
+      min-height: 200px;
+    }
+
+    select:focus, input:focus, textarea:focus {
       border-color: #4dabf7;
     }
 
@@ -233,8 +241,20 @@
       </div>
     </div>
 
+    <div class="section">
+      <div class="section-title">AI Prompt (Advanced)</div>
+
+      <div class="form-group">
+        <label for="customPrompt">Custom Prompt Template</label>
+        <textarea id="customPrompt" rows="12" placeholder="Enter custom prompt..."></textarea>
+        <p class="help-text">Use ${theme} as placeholder for user input. Leave empty to use default prompt.</p>
+      </div>
+
+      <button class="btn btn-secondary" id="resetPromptBtn">Reset to Default</button>
+    </div>
+
     <div class="actions">
-      <button class="btn btn-secondary" id="clearBtn">Clear</button>
+      <button class="btn btn-secondary" id="clearBtn">Clear All</button>
       <button class="btn btn-primary" id="saveBtn">Save Settings</button>
     </div>
 

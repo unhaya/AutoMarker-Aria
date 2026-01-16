@@ -1,4 +1,4 @@
-// AutoMarker Aria v5.5 - Content Script (Highlight Engine)
+// AutoMarker Aria - Content Script (Highlight Engine)
 
 (function() {
   'use strict';
@@ -13,7 +13,7 @@
   let currentNegatives = [];
   let isEnabled = true;
 
-  // Listen for messages
+  // Listen for messages from background/popup
   chrome.runtime.onMessage.addListener((message, sender, sendResponse) => {
     if (message.action === 'highlight') {
       currentSlots = message.data.slots || [];
@@ -249,7 +249,7 @@
     subtree: true
   });
 
-  // Auto-apply on load
+  // Auto-apply on load from storage
   async function init() {
     try {
       const data = await chrome.storage.local.get(['automarker_settings']);
@@ -260,16 +260,35 @@
         currentNegatives = settings.negatives || [];
 
         if (currentSlots.length > 0 || currentNegatives.length > 0) {
-          // Initial highlight with delay for page to render
-          setTimeout(() => highlightPage(), 500);
-          // Second pass for dynamic content (Google search results)
-          setTimeout(() => highlightPage(), 1500);
+          // Multiple passes for dynamic content (Google loads results progressively)
+          highlightPage();
+          setTimeout(() => highlightPage(), 800);
+          setTimeout(() => highlightPage(), 2000);
         }
       }
     } catch (e) {
       // Extension context invalidated
     }
   }
+
+  // Listen for storage changes (handles AI Build scenario)
+  chrome.storage.onChanged.addListener((changes, namespace) => {
+    if (namespace !== 'local' || !changes.automarker_settings) return;
+
+    const settings = changes.automarker_settings.newValue;
+    if (settings?.enabled) {
+      currentSlots = (settings.slots || []).filter(s => s.keyword?.trim());
+      currentNegatives = settings.negatives || [];
+
+      if (currentSlots.length > 0 || currentNegatives.length > 0) {
+        highlightPage();
+        setTimeout(() => highlightPage(), 800);
+        setTimeout(() => highlightPage(), 2000);
+      }
+    } else {
+      removeAllHighlights();
+    }
+  });
 
   if (document.readyState === 'loading') {
     document.addEventListener('DOMContentLoaded', init);

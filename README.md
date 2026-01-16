@@ -1,161 +1,214 @@
 # AutoMarker Aria
 
-**"Design your search before you search."** — A Chrome extension that transforms how you find information.
+**AI builds your search strategy before you search.**
+
+Enter a topic. AI instantly generates keywords to find, noise to exclude, and executes an optimized Google search—all in one click.
+
+> **Cost:** ~$0.0003 per search. **100 searches = ~$0.03 (less than 5 yen).** Gemini free tier also available.
+
+<!--
+TODO: Add demo GIF here
+![Demo](docs/demo.gif)
+-->
 
 ---
 
-## The Problem
+## The Core Problem
 
-You type keywords into Google. You get a million results. You scroll. You skim. You get tired.
+Google is broken for serious research.
 
-**AutoMarker Aria flips this.**
+Search "ergonomics" and you get:
+- **Page 1:** Amazon chairs, Rakuten desks, shopping ads
+- **Page 2:** More products, affiliate blogs, job listings
+- **Page 3:** Finally, maybe some actual content
 
-Instead of searching and then filtering, you **design your search strategy first** — then let Google do the heavy lifting while Aria highlights what matters.
-
-```
-Traditional: Keywords → Search → Manually scan millions of results → Exhaustion
-
-Aria: Theme → AI Strategy → Search → Important info visually pops out
-```
+You wanted research. You got a shopping mall.
 
 ---
 
-## How It Works (30 seconds)
+## What Aria Does
 
-### Before (Traditional Search)
-1. Search "ergonomics"
-2. Get 100 million results
-3. Can't tell what's important
-4. Distracted by ads and sales pages
-5. Give up
+**1. AI Strategy (the main feature)**
 
-### After (Aria Search)
-1. Enter theme: "Ergonomics"
-2. Click **AI Build**
-3. AI designs search strategy in 1 second
-4. Google search auto-executes
-5. **Core concepts = Yellow**, **Evidence = Pink**, **Noise = Strikethrough**
-6. Information you need **visually surfaces**
+You type a topic. AI thinks:
+> "What does someone searching 'ergonomics' actually want? Academic papers? Workplace guidelines? What noise will pollute results?"
+
+Then generates:
+- **8 keywords** to find (theme, synonyms, quality signals)
+- **5+ exclusions** to remove (-Amazon -楽天 -chair -desk -job)
+- **Optimized query** that executes automatically
+
+**2. Visual Highlighting**
+
+On the search results page:
+- Core concepts → Yellow
+- Evidence/practical terms → Pink
+- Quality signals → Purple
+- Related concepts → Green
+- Commercial noise → ~~Strikethrough~~
+
+**Result:** One click. Clean results. Important words jump out.
+
+---
+
+## Quick Start
+
+### 1. Install
+
+**Option A: Download ZIP** (recommended)
+- Go to [Releases](../../releases) → Download the latest `.zip` file
+- Unzip to any folder (e.g., Desktop)
+
+**Option B: Clone repository**
+```bash
+git clone https://github.com/unhaya/AutoMarker-Aria.git
+```
+
+**Then load into Chrome:**
+
+1. Open `chrome://extensions` in your browser
+2. Enable **Developer mode** (toggle in top-right)
+3. Click **Load unpacked** → Select the unzipped/cloned folder
+4. Done! AutoMarker icon appears in toolbar
+
+> **Tip:** If you don't see the icon, click the puzzle piece (🧩) in Chrome toolbar and pin AutoMarker.
+
+### 2. Configure AI (one-time)
+- Click extension icon → ⚙ Settings
+- Choose provider: **Claude**, **OpenAI**, or **Gemini**
+- Enter API key
+
+### 3. Use
+- Click extension icon
+- Enter topic (e.g., "behavioral economics")
+- Click **AI Build**
+- Done. Search opens with highlights applied.
 
 ---
 
 ## Features
 
-### AI Build (One-Click Intelligence)
-Enter a theme. Click once. AI generates everything:
+### AI-Generated Search Strategy
+| What AI Creates | Purpose |
+|-----------------|---------|
+| 8 Keywords | Terms to highlight (hierarchical colors) |
+| 5+ Exclusions | Noise to filter from search (-Amazon -楽天 etc.) |
+| Optimized Query | Auto-executes in Google |
 
-| Generated | Description |
-|-----------|-------------|
-| Search Query | Optimized query with noise exclusions |
-| L1 Keywords | Core concepts (Yellow highlight) |
-| L2 Keywords | Evidence & data (Pink highlight) |
-| L3 Keywords | Context & technical terms (Purple highlight) |
-| L4 Keywords | Related concepts (Green highlight) |
-| Negatives | Commercial noise (Strikethrough + fade) |
+### 4-Level Highlight Hierarchy
+| Level | Color | Contains |
+|-------|-------|----------|
+| L1 | Yellow | Core theme + synonyms |
+| L2 | Pink | Practical terms (効果, benefits, how) |
+| L3 | Purple | Quality signals (研究, analysis, expert) |
+| L4 | Green | Related concepts |
 
-### 4-Color Hierarchy
-Information importance is **instantly visible**. No more scanning walls of text.
+### Noise Suppression
+Commercial words appear with strikethrough + fade. Your eyes skip them automatically.
 
-### Negatives (Noise Suppression)
-Words like "sale," "buy," "amazon" are auto-detected and visually suppressed. **Only the signal remains.**
+### Manual Mode
+Don't want AI? Type keywords directly into slots.
+
+---
+
+## Supported AI Providers & Cost
+
+| Provider | Model | Cost per Search | Notes |
+|----------|-------|-----------------|-------|
+| **Claude** | Haiku 3.5 | ~$0.0003 | Recommended (fast + cheap) |
+| **OpenAI** | GPT-4o Mini | ~$0.0002 | Reliable |
+| **Gemini** | 2.0 Flash | Free* | Free tier: 15 requests/min |
+
+**Real-world cost:**
+- 100 searches = **~$0.03** (less than 5 yen)
+- 1,000 searches = **~$0.30** (about 45 yen)
+- Gemini free tier = **$0** (15 requests/min limit)
+
+**It's essentially free.** The time saved on a single search pays for hundreds of AI calls.
+
+*API keys required. Get yours:*
+- Claude: [console.anthropic.com](https://console.anthropic.com)
+- OpenAI: [platform.openai.com](https://platform.openai.com)
+- Gemini: [aistudio.google.com](https://aistudio.google.com)
 
 ---
 
 ## Who This Is For
 
-- Researchers drowning in search results
-- Students writing papers
-- Engineers hunting technical documentation
-- Anyone tired of "search fatigue"
+- **Researchers** drowning in irrelevant results
+- **Students** writing papers
+- **Engineers** hunting documentation
+- **Analysts** filtering signal from noise
+- **Anyone** tired of scrolling past Amazon links
 
 ---
 
-## Installation
+## How the AI Strategy Works
 
-### Chrome Web Store
-*Coming soon*
+When you search "人間工学" (ergonomics), AI thinks:
 
-### Manual Install
-1. Download from [Releases](../../releases)
-2. Unzip to any folder
-3. Open `chrome://extensions`
-4. Enable "Developer mode" (top right)
-5. Click "Load unpacked" → Select the folder
+> "Someone searching this probably wants academic/professional content, not shopping results."
 
----
+**Keywords generated:**
+- 人間工学, エルゴノミクス (theme + synonym)
+- 効果, 改善 (practical terms)
+- 研究, 事例 (quality signals)
+- 作業環境, 生産性 (related concepts)
 
-## Usage
+**Exclusions generated:**
+- -椅子 -デスク -マウス (product categories)
+- -Amazon -楽天 -通販 (shopping sites)
+- -求人 -資格 (job/career noise)
 
-### AI Build (Recommended)
-1. Click the extension icon
-2. Click ⚙ to configure AI (Claude / ChatGPT / Gemini)
-3. Enter a theme (e.g., "Ergonomics", "Quantum Computing", "Investment Strategy")
-4. Click **AI Build**
-5. Strategy → Google Search → Highlights — **all automatic**
-
-### Manual Mode
-Don't want AI? Just type keywords directly into the slots.
+**Result:** Cleaner search, highlighted insights, zero scrolling fatigue.
 
 ---
 
-## Supported AI Providers
-
-| Provider | Recommended Model | Notes |
-|----------|-------------------|-------|
-| **Claude** | Claude 3.5 Haiku | Fast & cheap (recommended) |
-| **OpenAI** | GPT-4o Mini | Reliable |
-| **Gemini** | Gemini 2.0 Flash | Free tier available |
-
----
-
-## Why I Built This
-
-Search should be an **intellectual act**.
-
-But it became a passive chore — type something, hope for the best, scroll endlessly.
-
-Aria makes search a **design act**.
-
-"For this topic, the core is X, the evidence is Y, the noise is Z."
-
-This **Pre-Search thinking** happens in one second with AI, then you cast a **strategically designed net** into Google's vast ocean.
-
-That's AutoMarker Aria.
-
----
-
-## Technical Specs
+## Technical Details
 
 - **Manifest V3** compliant
-- **Service Worker** for efficient background processing
-- **MutationObserver** for dynamic content
-- **TreeWalker API** for high-speed text node traversal
+- **Service Worker** background processing
+- **MutationObserver** for dynamic content (Google loads results progressively)
+- **TreeWalker API** for fast text node traversal
+- **chrome.storage** for settings persistence
+
+### File Structure
+```
+AutoMarker-Aria/
+├── manifest.json      # Extension config
+├── background.js      # Auto-trigger on search pages
+├── content.js         # Highlight engine
+├── content.css        # Highlight styles
+├── popup.html/css/js  # Main UI
+├── options.html/js    # API configuration
+└── icons/             # Extension icons
+```
 
 ---
 
-## File Structure
+## Privacy
 
-```
-AutoMarker-Aria/
-├── manifest.json     # Extension config
-├── background.js     # Search detection & auto-trigger
-├── content.js        # Highlight engine
-├── content.css       # Highlight styles
-├── popup.html/css/js # UI with AI Build
-├── options.html/js   # API configuration
-└── icons/            # Extension icons
-```
+- **No data collection** — Everything runs locally
+- **API calls only** — Your theme is sent to AI provider (Claude/OpenAI/Gemini)
+- **No tracking** — No analytics, no telemetry
 
 ---
 
 ## License
 
-MIT License
+MIT License — Use freely, modify freely.
 
 ---
 
 ## Philosophy
 
-**"For searches that truly matter, use Aria."**
+Search should be an **intellectual act**, not passive scrolling.
 
-Once you experience the difference, you won't go back to staring at a blank search box hoping for the best.
+Aria makes you think *before* you search:
+- "What am I really looking for?"
+- "What noise will I encounter?"
+- "What signals indicate quality content?"
+
+This thinking happens in 1 second with AI. Then you cast a **strategically designed net** into Google's ocean.
+
+**For searches that truly matter, use Aria.**
