@@ -6,12 +6,16 @@
 
 1. [Releases](../../releases) から ZIP をダウンロード
 2. 解凍
-3. `chrome://extensions` → Developer mode ON → Load unpacked
+3. Chrome で `chrome://extensions` を開く
+4. 右上の「Developer mode」を ON
+5. 「Load unpacked」→ 解凍したフォルダを選択
 
 ## Setup
 
 Settings (⚙) で API キーを設定:
 - Claude / OpenAI / Gemini
+
+プロンプトのカスタマイズも可能（Advanced セクション）。
 
 ## Use
 
