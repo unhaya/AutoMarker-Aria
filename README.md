@@ -33,9 +33,13 @@ Custom prompt available in Advanced section.
 
 ## Use
 
+### With AI
 1. Enter theme
 2. Click AI Build
 3. Search opens with keywords highlighted
+
+### Without AI
+No API key required. Type keywords directly into slots and browse any page — highlights apply automatically.
 
 ## Highlight Levels
 
