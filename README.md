@@ -1,62 +1,62 @@
 # AutoMarker Aria
 
-検索結果のキーワードハイライター。AIで検索戦略を自動生成。
+Chrome extension. Keyword highlighter for search results with AI-powered search strategy generation.
 
-## 何ができるか
+## What It Does
 
-「人間工学」で検索すると、Amazon の椅子、楽天のデスク、求人情報ばかり出てくる。
+Search "ergonomics" and you get Amazon chairs, Rakuten desks, job listings. Page after page of noise.
 
-このツールは検索前に AI が戦略を立てる：
-- ハイライトすべきキーワード（4階層）
-- 除外すべきノイズ（-Amazon -楽天 -求人 等）
+This tool builds a strategy *before* you search:
+- Keywords to highlight (4-tier hierarchy)
+- Noise to exclude (-Amazon -Rakuten -jobs etc.)
 
-結果：ECサイトや求人を除外した検索結果で、重要なキーワードが色分けされる。
+Result: Search results filtered from EC sites and job listings, with important keywords color-coded.
 
 ## Install
 
-1. [Releases](../../releases) から ZIP をダウンロード
-2. 解凍
-3. Chrome で `chrome://extensions` を開く
-4. 右上の「Developer mode」を ON
-5. 「Load unpacked」→ 解凍したフォルダを選択
+1. Download ZIP from [Releases](../../releases)
+2. Unzip
+3. Open `chrome://extensions` in Chrome
+4. Enable "Developer mode" (top-right toggle)
+5. Click "Load unpacked" → Select the unzipped folder
 
 ## Setup
 
-Settings (⚙) で API キーを設定:
+Settings (⚙) to configure API key:
 - Claude / OpenAI / Gemini
 
-プロンプトのカスタマイズも可能（Advanced セクション）。
+Custom prompt available in Advanced section.
 
 ## Use
 
-1. テーマを入力
-2. AI Build
-3. 検索結果が開き、キーワードがハイライトされる
+1. Enter theme
+2. Click AI Build
+3. Search opens with keywords highlighted
 
 ## Highlight Levels
 
-検索結果のキーワードを4色×2スロット（計8個）でハイライト：
+4 colors × 2 slots (8 total) for keyword highlighting:
 
-| Level | Color | スロット数 | 用途 |
-|-------|-------|-----------|------|
-| L1 | Yellow | 2 | Core — テーマの本質 |
-| L2 | Pink | 2 | Evidence — 根拠・効果 |
-| L3 | Purple | 2 | Signals — 品質の指標 |
-| L4 | Green | 2 | Related — 関連概念 |
+| Level | Color | Slots | Purpose |
+|-------|-------|-------|---------|
+| L1 | Yellow | 2 | Core — Theme essence |
+| L2 | Pink | 2 | Evidence — Proof & effects |
+| L3 | Purple | 2 | Signals — Quality indicators |
+| L4 | Green | 2 | Related — Related concepts |
 
-- 各スロットの色はカラーピッカーで自由に変更可能
-- AI なしでも手動でキーワードを入力してハイライトできる
-- 除外ワード（-Amazon -楽天 等）も自動生成
+- Color picker available for each slot
+- Manual keyword input works without AI
+- Exclusion words (-Amazon -Rakuten etc.) auto-generated
 
 ## Cost
 
-| Provider | 1回 | 100回 | 1000回 |
+| Provider | 1x | 100x | 1000x |
 |----------|-----|-------|--------|
 | Claude Haiku | $0.0003 | $0.03 | $0.30 |
 | OpenAI GPT-4o Mini | $0.0002 | $0.02 | $0.20 |
-| Gemini Flash | 無料 | 無料 | 無料 |
+| Gemini Flash | Free | Free | Free |
 
-Gemini は 15回/分の制限あり。
+Gemini: 15 requests/min limit.
 
 ## License
 
@@ -64,4 +64,4 @@ MIT
 
 ---
 
-*検索は知的行為であるべきだ。*
+*Search should be an intellectual act.*
