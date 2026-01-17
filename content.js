@@ -85,23 +85,13 @@
   // Store auto-highlight keywords for persistence across pages
   let autoHighlightKeywords = [];
   let autoHighlightSlots = []; // Keep auto slots for MutationObserver
-  let lastSearchQuery = ''; // Track last search query to detect new searches
 
   // Clear AI Build settings when new search is detected
+  // Sends message to background.js which clears storage (works even when popup is closed)
   async function clearAiBuildSettings() {
     try {
-      const data = await chrome.storage.local.get(['automarker_settings']);
-      const settings = data.automarker_settings || {};
-
-      // Clear slots and negatives, keep other settings
-      await chrome.storage.local.set({
-        automarker_settings: {
-          ...settings,
-          slots: [],
-          negatives: []
-        }
-      });
-
+      // Send clearAll to background.js (same as popup's Clear button)
+      await chrome.runtime.sendMessage({ action: 'clearAll' });
       currentSlots = [];
       currentNegatives = [];
     } catch (e) {
@@ -118,23 +108,13 @@
     // On search pages, extract query and save it
     if (isSearchPage()) {
       const query = getSearchQuery();
-
-      // Detect new search: if query changed and we have manual slots, clear them
-      if (query && query !== lastSearchQuery && currentSlots.length > 0) {
-        // Check if current slots are from AI Build (not auto-highlight)
-        const isAiBuildSlots = currentSlots.some(s =>
-          !autoHighlightSlots.find(a => a.keyword === s.keyword)
-        );
-
-        if (isAiBuildSlots) {
-          await clearAiBuildSettings();
-        }
-      }
-      lastSearchQuery = query;
-
       words = parseSearchQueryWords(query);
 
       if (words.length > 0) {
+        // New search detected: always clear AI Build settings to allow auto-highlight
+        // This ensures fresh searches use auto-highlight, not stale AI Build keywords
+        await clearAiBuildSettings();
+
         // Save auto-highlight keywords to storage for use on visited pages
         autoHighlightKeywords = words;
         try {
@@ -144,24 +124,27 @@
         }
       }
     } else {
-      // On non-search pages, load saved keywords from storage
-      if (autoHighlightKeywords.length > 0) {
-        words = autoHighlightKeywords;
-      } else {
-        try {
-          const data = await chrome.storage.local.get(['automarker_auto_keywords']);
-          words = data.automarker_auto_keywords || [];
-          autoHighlightKeywords = words;
-        } catch (e) {
-          // Extension context invalidated
-        }
-      }
-    }
+      // On non-search pages, check if we have stored slots (from AI Build via popup)
+      // If so, use those instead of auto-highlight
+      try {
+        const data = await chrome.storage.local.get(['automarker_settings', 'automarker_auto_keywords']);
+        const settings = data.automarker_settings || {};
+        const storedSlots = (settings.slots || []).filter(s => s.keyword?.trim());
 
-    // Skip auto-highlight if manual slots are set (and not cleared above)
-    if (currentSlots.length > 0) {
-      autoHighlightSlots = [];
-      return;
+        if (storedSlots.length > 0) {
+          // AI Build slots exist, use them (skip auto-highlight)
+          currentSlots = storedSlots;
+          currentNegatives = settings.negatives || [];
+          autoHighlightSlots = [];
+          return;
+        }
+
+        // No AI Build slots, use auto-highlight keywords
+        words = data.automarker_auto_keywords || [];
+        autoHighlightKeywords = words;
+      } catch (e) {
+        // Extension context invalidated
+      }
     }
 
     if (words.length === 0) {
@@ -403,6 +386,20 @@
 
       // Load saved auto-highlight keywords
       autoHighlightKeywords = data.automarker_auto_keywords || [];
+
+      // CRITICAL: On search pages, always clear AI Build slots first
+      // This ensures new searches use auto-highlight, not stale AI Build keywords
+      if (isSearchPage() && autoHighlightEnabled) {
+        const query = getSearchQuery();
+        if (query) {
+          await clearAiBuildSettings();
+          // After clearing, run auto-highlight
+          autoHighlightSearchQuery();
+          setTimeout(() => autoHighlightSearchQuery(), 800);
+          setTimeout(() => autoHighlightSearchQuery(), 2000);
+          return; // Skip loading old slots
+        }
+      }
 
       if (settings?.enabled) {
         currentSlots = (settings.slots || []).filter(s => s.keyword?.trim());

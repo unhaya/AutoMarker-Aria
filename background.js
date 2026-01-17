@@ -103,6 +103,26 @@ async function triggerHighlight(tabId, slots, negatives = []) {
   }
 }
 
+// Listen for clearAll message from content script (triggered on new search)
+chrome.runtime.onMessage.addListener((message, sender, sendResponse) => {
+  if (message.action === 'clearAll') {
+    // Clear slots and negatives, keep other settings (same as popup clearAll)
+    chrome.storage.local.get(['automarker_settings']).then(data => {
+      const settings = data.automarker_settings || {};
+      chrome.storage.local.set({
+        automarker_settings: {
+          ...settings,
+          slots: [],
+          negatives: []
+        }
+      }).then(() => {
+        sendResponse({ success: true });
+      });
+    });
+    return true; // Keep channel open for async response
+  }
+});
+
 // Listen for storage changes to re-apply highlights
 chrome.storage.onChanged.addListener(async (changes, namespace) => {
   if (namespace !== 'local') return;

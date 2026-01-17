@@ -212,6 +212,14 @@ class AutoMarkerPopup {
   }
 
   bindEvents() {
+    // Listen for storage changes (e.g., when content.js clears AI Build settings on new search)
+    chrome.storage.onChanged.addListener((changes, namespace) => {
+      if (namespace === 'local' && changes.automarker_settings) {
+        // Reload UI to reflect storage changes (e.g., cleared slots)
+        this.loadSettings();
+      }
+    });
+
     // Master toggle
     this.masterToggle.addEventListener('change', () => {
       this.saveSettings();
@@ -303,24 +311,26 @@ class AutoMarkerPopup {
     const data = await chrome.storage.local.get(['automarker_settings']);
     const settings = data.automarker_settings || {};
 
-    if (settings.slots) {
-      settings.slots.forEach((slotData, index) => {
-        if (this.slots[index] && slotData) {
-          this.slots[index].querySelector('.keyword-input').value = slotData.keyword || '';
-          if (slotData.color) {
-            this.slots[index].querySelector('.color-picker').value = slotData.color;
-          }
-        }
-      });
-    }
+    // Always sync UI with storage (clear slots if empty)
+    this.slots.forEach((slot, index) => {
+      const slotData = settings.slots?.[index];
+      slot.querySelector('.keyword-input').value = slotData?.keyword || '';
+      if (slotData?.color) {
+        slot.querySelector('.color-picker').value = slotData.color;
+      }
+    });
 
     if (settings.enabled !== undefined) {
       this.masterToggle.checked = settings.enabled;
     }
 
+    // Sync negatives (clear if empty)
     if (settings.negatives?.length > 0) {
       this.negatives = settings.negatives;
       this.displayNegatives();
+    } else {
+      this.negatives = [];
+      this.negativesSection.classList.add('hidden');
     }
 
     // Load useNegativesInSearch setting (default: false)
