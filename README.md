@@ -1,77 +1,36 @@
 # AutoMarker Aria
 
-Chrome extension. Keyword highlighter for search results with AI-powered search strategy generation.
+AIが検索キーワードを生成 → 検索結果でキーワードをカラーハイライト
 
 ## Demo
 
 https://github.com/user-attachments/assets/fb6a90f3-45d1-4468-a895-e876f8944121
 
-## What It Does
+## 機能
 
-Search "ergonomics" and you get Amazon chairs, Rakuten desks, job listings. Page after page of noise.
+1. **AI Build**: テーマを入力 → AIがキーワード8個 + 除外ワードを生成 → Google検索
+2. **ハイライト**: 検索結果ページでキーワードが色付きで表示される
+3. **手動入力**: APIなしでも使える。キーワードを直接入力するだけ
 
-This tool builds a strategy *before* you search:
-- Keywords to highlight (4-tier hierarchy, up to 8)
-- Noise to exclude (-Amazon -Rakuten -jobs etc.)
+## インストール
 
-Result: Search results filtered from EC sites and job listings, with important keywords color-coded.
+1. [Releases](../../releases)からZIPダウンロード
+2. 解凍
+3. Chrome → `chrome://extensions` → 「デベロッパーモード」ON
+4. 「パッケージ化されていない拡張機能を読み込む」→ 解凍フォルダを選択
 
-## Install
+## 設定
 
-1. Download ZIP from [Releases](../../releases)
-2. Unzip
-3. Open `chrome://extensions` in Chrome
-4. Enable "Developer mode" (top-right toggle)
-5. Click "Load unpacked" → Select the unzipped folder
+⚙ → APIキーを設定（Claude / OpenAI / Gemini）
 
-## Setup
+## コスト
 
-Settings (⚙) to configure API key:
-- Claude / OpenAI / Gemini
-
-Custom prompt available in Advanced section.
-
-## Use
-
-### With AI
-1. Enter theme
-2. Click AI Build
-3. Search opens with keywords highlighted
-
-### Without AI
-No API key required. Type keywords directly into slots and browse any page — highlights apply automatically.
-
-## Highlight Levels
-
-4 colors × 2 slots (8 total) for keyword highlighting:
-
-| Level | Color | Slots | Purpose |
-|-------|-------|-------|---------|
-| L1 | Yellow | 2 | Core — Theme essence |
-| L2 | Pink | 2 | Evidence — Proof & effects |
-| L3 | Purple | 2 | Signals — Quality indicators |
-| L4 | Green | 2 | Related — Related concepts |
-
-- Color picker available for each slot
-- Manual keyword input works without AI
-- Exclusion words (-Amazon -Rakuten etc.) auto-generated
-
-## Cost
-
-| Provider | 1x | 100x | 1000x |
+| Provider | 1回 | 100回 | 1000回 |
 |----------|-----|-------|--------|
 | Claude Haiku | $0.0003 | $0.03 | $0.30 |
-| OpenAI GPT-4o Mini | $0.0002 | $0.02 | $0.20 |
-| Gemini Flash | Free tier | Free tier | Free tier |
-
-Gemini: Free tier available (15 RPM, 1500 RPD limit).
+| GPT-4o Mini | $0.0002 | $0.02 | $0.20 |
+| Gemini Flash | 無料枠 | 無料枠 | 無料枠 |
 
 ## License
 
 MIT
-
----
-
-*Search should be an intellectual act.*
-
-Demo uses [ClipboardTranslator](https://github.com/unhaya/ClipboardTranslator) for real-time translation.
