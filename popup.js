@@ -323,7 +323,7 @@ class AutoMarkerPopup {
       this.displayNegatives();
     }
 
-    // Load useNegativesInSearch setting (default: true)
+    // Load useNegativesInSearch setting (default: false)
     if (settings.useNegativesInSearch !== undefined) {
       this.useNegativesInSearch.checked = settings.useNegativesInSearch;
     }
@@ -492,8 +492,10 @@ class AutoMarkerPopup {
     const isExpanded = !this.extendedSlots.classList.contains('hidden');
 
     // Use selected preset as prompt template
+    // First check for user's custom presets in storage, fallback to defaults
     const selectedPreset = this.presetSelect.value || 'default';
-    let promptTemplate = PRESETS[selectedPreset] || PRESETS.default;
+    const customPresets = await this.loadCustomPresets();
+    let promptTemplate = customPresets[selectedPreset] || PRESETS[selectedPreset] || PRESETS.default;
 
     // If not expanded, modify prompt to generate only 3 keywords (L1b, L2a, L2b)
     if (!isExpanded) {
@@ -620,6 +622,15 @@ class AutoMarkerPopup {
     this.negativesList.innerHTML = this.negatives
       .map(word => `<span class="negative-word">${word}</span>`)
       .join('');
+  }
+
+  async loadCustomPresets() {
+    try {
+      const data = await chrome.storage.local.get(['automarker_presets']);
+      return data.automarker_presets || {};
+    } catch (e) {
+      return {};
+    }
   }
 }
 

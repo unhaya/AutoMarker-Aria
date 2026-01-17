@@ -19,28 +19,185 @@ const MODELS = {
   ]
 };
 
-const DEFAULT_PROMPT = `Theme: "\${theme}"
+// Default presets (same as popup.js PRESETS)
+const DEFAULT_PRESETS = {
+  default: `Theme: "\${theme}"
 
 Output language: SAME as theme.
 
 JSON only:
-{"keywords":["L1a","L1b","L2a","L2b","L3a","L3b","L4a","L4b"],"negatives":["n1","n2","n3","n4","n5"]}
+{"keywords":["L1b","L2a","L2b","L3a","L3b","L4a","L4b"],"negatives":["n1","n2","n3","n4","n5"]}
 
-keywords (8 slots, priority order):
-- L1 (0-1): Core — The theme itself and its synonym. MOST IMPORTANT.
-- L2 (2-3): Evidence — Data, research, proof that validates quality content.
-- L3 (4-5): Signals — Quality indicators (white paper, guide, analysis). For deep research.
-- L4 (6-7): Related — Adjacent concepts. For comprehensive exploration.
+NOTE: User's theme is auto-placed in L1a. Generate 7 keywords for L1b-L4b.
 
-Most users only see L1+L2 (4 keywords). L3+L4 appear when expanded for complex research.
+keywords (7 slots):
+- L1b: Core synonym of theme
+- L2a-L2b: Evidence — Data, research, proof that validates quality content.
+- L3a-L3b: Signals — Quality indicators (white paper, guide, analysis). For deep research.
+- L4a-L4b: Related — Adjacent concepts. For comprehensive exploration.
 
-negatives (5): Words on JUNK pages. Always: Amazon, 楽天, shop, buy, 通販. Add domain noise.
+negatives (5): Think SPECIFICALLY about this theme. What pages appear in search but provide NO real value?
+- Commercial noise: shopping, affiliate, sales pages
+- Content farms: thin SEO articles, clickbait, AI-generated filler
+- Off-topic traps: terms that sound related but lead to different domains
+- Outdated: old version numbers, deprecated terms
+Generate 5 negatives that a domain expert would know to avoid for THIS specific theme.
 
-No minus signs. No markdown. JSON only.`;
+CRITICAL: Negatives must NOT overlap with theme or keywords. Never negate what you're searching FOR.
+
+No minus signs. No markdown. JSON only.`,
+
+  academic: `Theme: "\${theme}"
+
+Output language: SAME as theme.
+
+JSON only:
+{"keywords":["L1b","L2a","L2b","L3a","L3b","L4a","L4b"],"negatives":["n1","n2","n3","n4","n5"]}
+
+GOAL: Find primary sources, peer-reviewed papers, official reports. Avoid secondary sources and summaries.
+
+NOTE: User's theme is auto-placed in L1a. Generate 7 keywords for L1b-L4b.
+
+keywords (7 slots):
+- L1b: Academic synonym (論文, research, study)
+- L2a-L2b: Evidence — Empirical proof (data, findings, results, 実験)
+- L3a-L3b: Signals — Quality markers (peer-reviewed, journal, 学会, .edu, .gov)
+- L4a-L4b: Related — Adjacent research fields
+
+negatives (5): Think about what pollutes academic searches for THIS theme:
+- Popular science rewrites that oversimplify
+- Student summaries and course notes
+- News articles citing papers without depth
+- Blog posts misinterpreting research
+- Predatory journal indicators for this field
+Generate 5 negatives specific to academic noise in this domain.
+
+CRITICAL: Negatives must NOT overlap with theme or keywords. Never negate what you're searching FOR.
+
+No minus signs. No markdown. JSON only.`,
+
+  technical: `Theme: "\${theme}"
+
+Output language: SAME as theme.
+
+JSON only:
+{"keywords":["L1b","L2a","L2b","L3a","L3b","L4a","L4b"],"negatives":["n1","n2","n3","n4","n5"]}
+
+GOAL: Find official docs, GitHub issues, Stack Overflow deep discussions. Avoid beginner tutorials and outdated content.
+
+NOTE: User's theme is auto-placed in L1a. Generate 7 keywords for L1b-L4b.
+
+keywords (7 slots):
+- L1b: Technical term (API, implementation, 実装)
+- L2a-L2b: Evidence — Implementation data (example, config, error, debug)
+- L3a-L3b: Signals — Quality sources (official docs, GitHub, Stack Overflow)
+- L4a-L4b: Related — Alternative libraries, related tools
+
+negatives (5): Think about technical search pollution for THIS specific technology:
+- Outdated version numbers or deprecated APIs
+- Beginner tutorial markers for this stack
+- Copy-paste code sites that lack explanation
+- Marketing pages disguised as documentation
+- Common misconceptions or anti-patterns in this domain
+Generate 5 negatives that an experienced developer would filter out.
+
+CRITICAL: Negatives must NOT overlap with theme or keywords. Never negate what you're searching FOR.
+
+No minus signs. No markdown. JSON only.`,
+
+  trends: `Theme: "\${theme}"
+
+Output language: SAME as theme.
+
+JSON only:
+{"keywords":["L1b","L2a","L2b","L3a","L3b","L4a","L4b"],"negatives":["n1","n2","n3","n4","n5"]}
+
+GOAL: Find fresh market analysis, forecasts, roadmaps. Prioritize 2025/2026 content.
+
+NOTE: User's theme is auto-placed in L1a. Generate 7 keywords for L1b-L4b.
+
+keywords (7 slots):
+- L1b: Year indicator (2025, 2026, latest)
+- L2a-L2b: Evidence — Trend data (forecast, 予測, growth, market size)
+- L3a-L3b: Signals — Quality sources (Gartner, IDC, analyst report, 調査レポート)
+- L4a-L4b: Related — Adjacent markets, emerging players
+
+negatives (5): Think about what makes trend research outdated or misleading for THIS theme:
+- Specific old years when this field changed significantly
+- Defunct companies or products in this space
+- Hype terms that peaked and faded
+- Clickbait prediction formats common in this industry
+- News rehashes vs original analysis markers
+Generate 5 negatives to filter stale or superficial trend content.
+
+CRITICAL: Negatives must NOT overlap with theme or keywords. Never negate what you're searching FOR.
+
+No minus signs. No markdown. JSON only.`,
+
+  comparison: `Theme: "\${theme}"
+
+Output language: SAME as theme.
+
+JSON only:
+{"keywords":["L1b","L2a","L2b","L3a","L3b","L4a","L4b"],"negatives":["n1","n2","n3","n4","n5"]}
+
+GOAL: Find honest comparisons, limitations, real user complaints. Avoid affiliate marketing and promotional content.
+
+NOTE: User's theme is auto-placed in L1a. Generate 7 keywords for L1b-L4b.
+
+keywords (7 slots):
+- L1b: Comparison term (vs, 比較, alternative)
+- L2a-L2b: Evidence — Honest assessment (limitation, デメリット, cons, 欠点)
+- L3a-L3b: Signals — Quality reviews (Reddit, 本音, real user, long-term review)
+- L4a-L4b: Related — Competitors, alternatives, migration
+
+negatives (5): Think about what makes comparison content biased or useless for THIS product/topic:
+- Affiliate disclosure patterns in this niche
+- Paid review indicators specific to this category
+- Fake review patterns common for this type of product
+- Marketing buzzwords this industry overuses
+- Superficial "top 10" formats that lack depth
+Generate 5 negatives to find genuinely honest comparisons.
+
+CRITICAL: Negatives must NOT overlap with theme or keywords. Never negate what you're searching FOR.
+
+No minus signs. No markdown. JSON only.`,
+
+  concepts: `Theme: "\${theme}"
+
+Output language: SAME as theme.
+
+JSON only:
+{"keywords":["L1b","L2a","L2b","L3a","L3b","L4a","L4b"],"negatives":["n1","n2","n3","n4","n5"]}
+
+GOAL: Understand fundamentals accurately. Find clear explanations with diagrams. Avoid SEO-optimized shallow content.
+
+NOTE: User's theme is auto-placed in L1a. Generate 7 keywords for L1b-L4b.
+
+keywords (7 slots):
+- L1b: Definition term (とは, what is, 意味, definition)
+- L2a-L2b: Evidence — Explanatory content (仕組み, how it works, 図解, diagram)
+- L3a-L3b: Signals — Quality sources (Wikipedia, 公式, official, textbook)
+- L4a-L4b: Related — Related concepts, prerequisites, next topics
+
+negatives (5): Think about what makes educational content shallow for THIS concept:
+- SEO filler phrases common when explaining this topic
+- Oversimplification markers that lose important nuance
+- Common misconceptions people spread about this
+- Tangentially related terms that lead to different concepts
+- Content farm patterns in this educational niche
+Generate 5 negatives to find deep, accurate explanations.
+
+CRITICAL: Negatives must NOT overlap with theme or keywords. Never negate what you're searching FOR.
+
+No minus signs. No markdown. JSON only.`
+};
 
 class OptionsPage {
   constructor() {
     this.provider = null;
+    this.currentPreset = 'default';
+    this.customPresets = {}; // User's customized presets
     this.init();
   }
 
@@ -54,6 +211,7 @@ class OptionsPage {
     this.providerCards = document.querySelectorAll('.provider-card');
     this.apiKeyInput = document.getElementById('apiKey');
     this.modelSelect = document.getElementById('model');
+    this.presetSelect = document.getElementById('presetSelect');
     this.customPromptInput = document.getElementById('customPrompt');
     this.saveBtn = document.getElementById('saveBtn');
     this.clearBtn = document.getElementById('clearBtn');
@@ -69,14 +227,30 @@ class OptionsPage {
       });
     });
 
-    // Save
-    this.saveBtn.addEventListener('click', () => this.save());
+    // Preset selection
+    this.presetSelect.addEventListener('change', () => {
+      this.saveCurrentPrompt(); // Save current before switching
+      this.currentPreset = this.presetSelect.value;
+      this.loadPresetPrompt();
+    });
+
+    // Auto-save prompt on change (debounced)
+    let saveTimeout;
+    this.customPromptInput.addEventListener('input', () => {
+      clearTimeout(saveTimeout);
+      saveTimeout = setTimeout(() => {
+        this.saveCurrentPrompt();
+      }, 500);
+    });
+
+    // Save API settings
+    this.saveBtn.addEventListener('click', () => this.saveApiSettings());
 
     // Clear
     this.clearBtn.addEventListener('click', () => this.clear());
 
-    // Reset prompt
-    this.resetPromptBtn.addEventListener('click', () => this.resetPrompt());
+    // Reset current preset
+    this.resetPromptBtn.addEventListener('click', () => this.resetCurrentPreset());
   }
 
   selectProvider(provider) {
@@ -110,9 +284,9 @@ class OptionsPage {
   }
 
   async loadSettings() {
-    const data = await chrome.storage.local.get(['automarker_api', 'automarker_prompt']);
+    const data = await chrome.storage.local.get(['automarker_api', 'automarker_presets']);
     const config = data.automarker_api;
-    const customPrompt = data.automarker_prompt;
+    this.customPresets = data.automarker_presets || {};
 
     if (config) {
       if (config.provider) {
@@ -126,12 +300,32 @@ class OptionsPage {
       }
     }
 
-    // Load custom prompt or show default
-    const promptToLoad = customPrompt || DEFAULT_PROMPT;
-    this.customPromptInput.value = promptToLoad;
+    // Load current preset prompt
+    this.loadPresetPrompt();
   }
 
-  async save() {
+  loadPresetPrompt() {
+    // Use custom preset if exists, otherwise use default
+    const prompt = this.customPresets[this.currentPreset] || DEFAULT_PRESETS[this.currentPreset];
+    this.customPromptInput.value = prompt;
+  }
+
+  async saveCurrentPrompt() {
+    const currentPrompt = this.customPromptInput.value.trim();
+    const defaultPrompt = DEFAULT_PRESETS[this.currentPreset];
+
+    if (currentPrompt === defaultPrompt) {
+      // If same as default, remove custom entry
+      delete this.customPresets[this.currentPreset];
+    } else {
+      // Save custom prompt
+      this.customPresets[this.currentPreset] = currentPrompt;
+    }
+
+    await chrome.storage.local.set({ automarker_presets: this.customPresets });
+  }
+
+  async saveApiSettings() {
     const config = {
       provider: this.provider,
       apiKey: this.apiKeyInput.value.trim(),
@@ -151,24 +345,22 @@ class OptionsPage {
     // Save API config
     await chrome.storage.local.set({ automarker_api: config });
 
-    // Save custom prompt (only if different from default)
-    const customPrompt = this.customPromptInput.value.trim();
-    if (customPrompt && customPrompt !== DEFAULT_PROMPT) {
-      await chrome.storage.local.set({ automarker_prompt: customPrompt });
-    } else {
-      await chrome.storage.local.remove(['automarker_prompt']);
-    }
+    // Also save current prompt
+    await this.saveCurrentPrompt();
 
-    this.showStatus('Settings saved successfully!', 'success');
+    this.showStatus('Settings saved!', 'success');
   }
 
   async clear() {
-    await chrome.storage.local.remove(['automarker_api', 'automarker_prompt']);
+    await chrome.storage.local.remove(['automarker_api', 'automarker_presets']);
 
     this.provider = null;
     this.apiKeyInput.value = '';
     this.modelSelect.innerHTML = '<option value="">Select a model</option>';
-    this.customPromptInput.value = DEFAULT_PROMPT;
+    this.customPresets = {};
+    this.currentPreset = 'default';
+    this.presetSelect.value = 'default';
+    this.loadPresetPrompt();
 
     this.providerCards.forEach(card => {
       card.classList.remove('selected');
@@ -178,9 +370,14 @@ class OptionsPage {
     this.showStatus('Settings cleared', 'success');
   }
 
-  resetPrompt() {
-    this.customPromptInput.value = DEFAULT_PROMPT;
-    this.showStatus('Prompt reset to default', 'success');
+  async resetCurrentPreset() {
+    // Remove custom prompt for current preset
+    delete this.customPresets[this.currentPreset];
+    await chrome.storage.local.set({ automarker_presets: this.customPresets });
+
+    // Reload default
+    this.customPromptInput.value = DEFAULT_PRESETS[this.currentPreset];
+    this.showStatus(`"${this.currentPreset}" reset to default`, 'success');
   }
 
   showStatus(message, type) {
@@ -193,8 +390,8 @@ class OptionsPage {
   }
 }
 
-// Export default prompt for use in popup.js
-window.DEFAULT_PROMPT = DEFAULT_PROMPT;
+// Export for popup.js
+window.DEFAULT_PRESETS = DEFAULT_PRESETS;
 
 // Initialize
 document.addEventListener('DOMContentLoaded', () => {

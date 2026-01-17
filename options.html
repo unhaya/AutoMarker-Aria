@@ -246,12 +246,24 @@
       <div class="section-title">AI Prompt (Advanced)</div>
 
       <div class="form-group">
-        <label for="customPrompt">Custom Prompt Template</label>
-        <textarea id="customPrompt" rows="12" placeholder="Enter custom prompt..."></textarea>
-        <p class="help-text">Use ${theme} as placeholder for user input. Presets above will update this field.</p>
+        <label for="presetSelect">Preset</label>
+        <select id="presetSelect">
+          <option value="default">Default</option>
+          <option value="academic">Academic</option>
+          <option value="technical">Technical</option>
+          <option value="trends">Trends</option>
+          <option value="comparison">Comparison</option>
+          <option value="concepts">Concepts</option>
+        </select>
       </div>
 
-      <button class="btn btn-secondary" id="resetPromptBtn">Reset to Default</button>
+      <div class="form-group">
+        <label for="customPrompt">Prompt Template</label>
+        <textarea id="customPrompt" rows="12" placeholder="Enter custom prompt..."></textarea>
+        <p class="help-text">Use ${theme} as placeholder. Changes auto-save when switching presets.</p>
+      </div>
+
+      <button class="btn btn-secondary" id="resetPromptBtn">Reset This Preset</button>
     </div>
 
     <div class="actions">
