@@ -404,48 +404,18 @@ class AutoMarkerPopup {
   }
 
   getDefaultPrompt() {
-    return `You are an expert research strategist. Given the theme "\${theme}", create a noise-filtering search strategy.
+    return `Theme: "\${theme}"
 
-GOAL: Help the user find high-quality, relevant content by selecting keywords that surface expert sources and excluding terms that pollute results with commercial, shallow, or off-topic content.
+Output language: SAME as theme.
 
-LANGUAGE RULE: Detect the theme's language and generate ALL output in that SAME language.
+JSON only:
+{"keywords":["k1","k2","k3","k4","k5","k6","k7","k8"],"negatives":["n1","n2","n3","n4","n5"]}
 
-Return ONLY valid JSON:
-{
-  "keywords": ["kw1", "kw2", "kw3", "kw4", "kw5", "kw6", "kw7", "kw8"],
-  "negatives": ["exclude1", "exclude2", "exclude3", "exclude4", "exclude5"]
-}
+keywords (8): Words that appear on QUALITY pages. Core terms + quality signals (white paper, research, guide). If time-sensitive, add year.
 
-STEP 1: FRESHNESS & PERSONA ANALYSIS
-- Is "\${theme}" trend-sensitive (tech, news, market) or timeless (principles, theory)?
-- If trend-sensitive: include year like "2025" or "latest" in keywords
-- If timeless: include "wiki", "guide", "fundamentals" type words
-- Who is searching? (engineer → GitHub/docs, executive → case study/ROI, consumer → review/comparison)
-- Add 1-2 keywords that appear on sites this persona trusts
+negatives (5): Words that appear on JUNK pages. Always include: Amazon, 楽天, shop, buy, 通販. Add domain-specific noise.
 
-STEP 2: KEYWORDS (8 total)
-Choose words that ACTUALLY APPEAR in quality search results:
-- [0-1]: Core theme + synonym
-- [2-3]: Practical terms real people use
-- [4-5]: Quality signals (white paper, research, analysis, implementation)
-- [6-7]: Freshness/persona keywords from Step 1
-
-NOTE: Multiple words = combined intent. Avoid academic jargon.
-
-STEP 3: NEGATIVES (5 required)
-What SPECIFIC noise pollutes "\${theme}" results?
-- EC sites dominating results
-- Adjacent but irrelevant fields sharing terminology
-- Job/career content (listings, salary, interview)
-- Wrong depth (beginner tutorials vs advanced research)
-- Noisy platforms (YouTube, TikTok, Pinterest)
-
-ALWAYS INCLUDE EC exclusions (without minus sign):
-- Japanese: Amazon, 楽天, Yahoo!ショッピング, 価格.com, 通販
-- English: Amazon, eBay, Walmart, shop, buy
-
-IMPORTANT: Return words WITHOUT minus signs. System adds them automatically.
-Ensure output is strictly valid JSON. No text before or after the JSON block.`;
+No minus signs. No markdown. JSON only.`;
   }
 }
 
