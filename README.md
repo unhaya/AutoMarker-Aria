@@ -10,11 +10,13 @@ AutoMarker Aria is a Chrome extension that lets AI handle the search tricks, so 
 - **Junk words** get filtered out for you
 - **Google stays Google** — nothing changes except it's cleaner
 
-No complicated setup. Just search, and everything's already easier to scan.
+No complicated setup. Just search, and your eyes know where to look.
 
 ## Demo
 
 https://github.com/user-attachments/assets/fb6a90f3-45d1-4468-a895-e876f8944121
+
+This isn't an AI that gives you answers. It's one that makes searching feel less stupid.
 
 ## What It Does
 
