@@ -303,7 +303,7 @@ class AutoMarkerPopup {
   }
 
   async callClaudeForStrategy(apiKey, model, prompt) {
-    console.log('Calling Claude with model:', model || 'claude-3-5-haiku-20241022');
+    console.log('Calling Claude with model:', model || 'claude-3-5-haiku-latest');
     const response = await fetch('https://api.anthropic.com/v1/messages', {
       method: 'POST',
       headers: {
@@ -313,7 +313,7 @@ class AutoMarkerPopup {
         'anthropic-dangerous-direct-browser-access': 'true'
       },
       body: JSON.stringify({
-        model: model || 'claude-3-5-haiku-20241022',
+        model: model || 'claude-3-5-haiku-latest',
         max_tokens: 500,
         messages: [{ role: 'user', content: prompt }]
       })
