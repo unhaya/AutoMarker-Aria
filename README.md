@@ -1,19 +1,16 @@
 # AutoMarker Aria
 
-**AI prepares your weapons. You do the hunting.**
+**Search smarter without thinking harder.**
 
-## Why This Exists
+Let's be honest — typing `AND` keywords and `-Amazon` exclusions every time is kind of a drag.
 
-When exploring unfamiliar territory, you don't know what noise to filter out.
+AutoMarker Aria is a Chrome extension that lets AI handle the search tricks, so you just look at results.
 
-Search "ergonomics" → Amazon chairs, Rakuten desks, job listings flood your results. You didn't know to exclude them because you're new to the field.
+- **Important terms** get color-coded automatically
+- **Junk words** get filtered out for you
+- **Google stays Google** — nothing changes except it's cleaner
 
-**Perplexity approach**: AI searches for you, gives you answers.
-**Aria approach**: AI builds your search strategy, you explore and judge.
-
-The difference matters. AI can predict noise in domains it knows. But discovery—finding unexpected connections, questioning sources, building understanding—that's human work.
-
-This tool lets AI do what it's good at (predicting junk), so you can do what you're good at (thinking).
+No complicated setup. Just search, and everything's already easier to scan.
 
 ## Demo
 
@@ -38,6 +35,11 @@ https://github.com/user-attachments/assets/fb6a90f3-45d1-4468-a895-e876f8944121
 Custom prompt available in Advanced section.
 
 ## Usage
+
+### Auto-Highlight (No Setup Required)
+Just search on Google. Your search terms are automatically highlighted — on the search results page AND on pages you visit from results.
+
+Toggle "Auto" in the header to enable/disable. Works with uAutoPagerize for infinite scroll pages.
 
 ### With AI
 1. Enter theme

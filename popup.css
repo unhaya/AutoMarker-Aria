@@ -33,6 +33,64 @@ h1 {
   color: #cdd6f4;
 }
 
+/* Header Toggles */
+.header-toggles {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+}
+
+/* Auto Highlight Toggle */
+.auto-hl-toggle {
+  display: flex;
+  align-items: center;
+  gap: 4px;
+  cursor: pointer;
+}
+
+.auto-hl-toggle .toggle-label {
+  font-size: 10px;
+  color: #6c7086;
+  font-weight: 500;
+}
+
+.auto-hl-toggle input {
+  opacity: 0;
+  width: 0;
+  height: 0;
+  position: absolute;
+}
+
+.toggle-slider-small {
+  position: relative;
+  width: 28px;
+  height: 16px;
+  background: #45475a;
+  border-radius: 16px;
+  transition: 0.2s;
+}
+
+.toggle-slider-small:before {
+  content: "";
+  position: absolute;
+  height: 12px;
+  width: 12px;
+  left: 2px;
+  bottom: 2px;
+  background: #6c7086;
+  border-radius: 50%;
+  transition: 0.2s;
+}
+
+.auto-hl-toggle input:checked + .toggle-slider-small {
+  background: #a6e3a1;
+}
+
+.auto-hl-toggle input:checked + .toggle-slider-small:before {
+  transform: translateX(12px);
+  background: #1e1e2e;
+}
+
 /* Master Toggle */
 .master-toggle {
   position: relative;

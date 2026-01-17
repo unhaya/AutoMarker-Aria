@@ -16,7 +16,12 @@ keywords (7 slots):
 - L3a-L3b: Signals — Quality indicators (white paper, guide, analysis). For deep research.
 - L4a-L4b: Related — Adjacent concepts. For comprehensive exploration.
 
-negatives (5): Words on JUNK pages. Always: Amazon, 楽天, shop, buy, 通販. Add domain noise.
+negatives (5): Think SPECIFICALLY about this theme. What pages appear in search but provide NO real value?
+- Commercial noise: shopping, affiliate, sales pages
+- Content farms: thin SEO articles, clickbait, AI-generated filler
+- Off-topic traps: terms that sound related but lead to different domains
+- Outdated: old version numbers, deprecated terms
+Generate 5 negatives that a domain expert would know to avoid for THIS specific theme.
 
 No minus signs. No markdown. JSON only.`,
 
@@ -27,7 +32,7 @@ Output language: SAME as theme.
 JSON only:
 {"keywords":["L1b","L2a","L2b","L3a","L3b","L4a","L4b"],"negatives":["n1","n2","n3","n4","n5"]}
 
-GOAL: Find primary sources, peer-reviewed papers, official reports. Avoid "matome" sites and shallow summaries.
+GOAL: Find primary sources, peer-reviewed papers, official reports. Avoid secondary sources and summaries.
 
 NOTE: User's theme is auto-placed in L1a. Generate 7 keywords for L1b-L4b.
 
@@ -37,7 +42,13 @@ keywords (7 slots):
 - L3a-L3b: Signals — Quality markers (peer-reviewed, journal, 学会, .edu, .gov)
 - L4a-L4b: Related — Adjacent research fields
 
-negatives (5): まとめ, NAVERまとめ, アフィリエイト, PR, sponsored, blog
+negatives (5): Think about what pollutes academic searches for THIS theme:
+- Popular science rewrites that oversimplify
+- Student summaries and course notes
+- News articles citing papers without depth
+- Blog posts misinterpreting research
+- Predatory journal indicators for this field
+Generate 5 negatives specific to academic noise in this domain.
 
 No minus signs. No markdown. JSON only.`,
 
@@ -48,7 +59,7 @@ Output language: SAME as theme.
 JSON only:
 {"keywords":["L1b","L2a","L2b","L3a","L3b","L4a","L4b"],"negatives":["n1","n2","n3","n4","n5"]}
 
-GOAL: Find official docs, GitHub issues, Stack Overflow deep discussions. Avoid outdated tutorials.
+GOAL: Find official docs, GitHub issues, Stack Overflow deep discussions. Avoid beginner tutorials and outdated content.
 
 NOTE: User's theme is auto-placed in L1a. Generate 7 keywords for L1b-L4b.
 
@@ -58,7 +69,13 @@ keywords (7 slots):
 - L3a-L3b: Signals — Quality sources (official docs, GitHub, Stack Overflow)
 - L4a-L4b: Related — Alternative libraries, related tools
 
-negatives (5): Qiita初心者, 入門, tutorial 2020, outdated, deprecated
+negatives (5): Think about technical search pollution for THIS specific technology:
+- Outdated version numbers or deprecated APIs
+- Beginner tutorial markers for this stack
+- Copy-paste code sites that lack explanation
+- Marketing pages disguised as documentation
+- Common misconceptions or anti-patterns in this domain
+Generate 5 negatives that an experienced developer would filter out.
 
 No minus signs. No markdown. JSON only.`,
 
@@ -79,7 +96,13 @@ keywords (7 slots):
 - L3a-L3b: Signals — Quality sources (Gartner, IDC, analyst report, 調査レポート)
 - L4a-L4b: Related — Adjacent markets, emerging players
 
-negatives (5): 2020, 2021, 2022, outdated, 古い
+negatives (5): Think about what makes trend research outdated or misleading for THIS theme:
+- Specific old years when this field changed significantly
+- Defunct companies or products in this space
+- Hype terms that peaked and faded
+- Clickbait prediction formats common in this industry
+- News rehashes vs original analysis markers
+Generate 5 negatives to filter stale or superficial trend content.
 
 No minus signs. No markdown. JSON only.`,
 
@@ -90,7 +113,7 @@ Output language: SAME as theme.
 JSON only:
 {"keywords":["L1b","L2a","L2b","L3a","L3b","L4a","L4b"],"negatives":["n1","n2","n3","n4","n5"]}
 
-GOAL: Find honest comparisons, limitations, real user complaints. Avoid affiliate "best X" lists.
+GOAL: Find honest comparisons, limitations, real user complaints. Avoid affiliate marketing and promotional content.
 
 NOTE: User's theme is auto-placed in L1a. Generate 7 keywords for L1b-L4b.
 
@@ -100,7 +123,13 @@ keywords (7 slots):
 - L3a-L3b: Signals — Quality reviews (Reddit, 本音, real user, long-term review)
 - L4a-L4b: Related — Competitors, alternatives, migration
 
-negatives (5): おすすめ, best, ランキング, affiliate, PR
+negatives (5): Think about what makes comparison content biased or useless for THIS product/topic:
+- Affiliate disclosure patterns in this niche
+- Paid review indicators specific to this category
+- Fake review patterns common for this type of product
+- Marketing buzzwords this industry overuses
+- Superficial "top 10" formats that lack depth
+Generate 5 negatives to find genuinely honest comparisons.
 
 No minus signs. No markdown. JSON only.`,
 
@@ -121,7 +150,13 @@ keywords (7 slots):
 - L3a-L3b: Signals — Quality sources (Wikipedia, 公式, official, textbook)
 - L4a-L4b: Related — Related concepts, prerequisites, next topics
 
-negatives (5): いかがでしたか, まとめサイト, コピペ, 3分でわかる, 簡単
+negatives (5): Think about what makes educational content shallow for THIS concept:
+- SEO filler phrases common when explaining this topic
+- Oversimplification markers that lose important nuance
+- Common misconceptions people spread about this
+- Tangentially related terms that lead to different concepts
+- Content farm patterns in this educational niche
+Generate 5 negatives to find deep, accurate explanations.
 
 No minus signs. No markdown. JSON only.`
 };
@@ -159,6 +194,9 @@ class AutoMarkerPopup {
 
     // Preset select
     this.presetSelect = document.getElementById('presetSelect');
+
+    // Auto-highlight toggle
+    this.autoHighlightToggle = document.getElementById('autoHighlightToggle');
   }
 
   bindEvents() {
@@ -166,6 +204,11 @@ class AutoMarkerPopup {
     this.masterToggle.addEventListener('change', () => {
       this.saveSettings();
       this.applyHighlights();
+    });
+
+    // Auto-highlight toggle
+    this.autoHighlightToggle.addEventListener('change', () => {
+      this.saveSettings();
     });
 
     // Show more
@@ -277,6 +320,11 @@ class AutoMarkerPopup {
     if (settings.preset) {
       this.presetSelect.value = settings.preset;
     }
+
+    // Load auto-highlight setting (default: true)
+    if (settings.autoHighlight !== undefined) {
+      this.autoHighlightToggle.checked = settings.autoHighlight;
+    }
   }
 
   async saveSettings() {
@@ -294,7 +342,8 @@ class AutoMarkerPopup {
         enabled: this.masterToggle.checked,
         negatives: this.negatives,
         useNegativesInSearch: this.useNegativesInSearch.checked,
-        preset: this.presetSelect.value
+        preset: this.presetSelect.value,
+        autoHighlight: this.autoHighlightToggle.checked
       }
     });
   }

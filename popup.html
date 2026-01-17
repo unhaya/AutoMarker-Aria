@@ -9,10 +9,17 @@
     <header>
       <div class="title-row">
         <h1>AutoMarker</h1>
-        <label class="master-toggle" title="Auto-highlight on search">
-          <input type="checkbox" id="masterToggle" checked>
-          <span class="toggle-slider"></span>
-        </label>
+        <div class="header-toggles">
+          <label class="auto-hl-toggle" title="Auto-highlight search query words">
+            <span class="toggle-label">Auto</span>
+            <input type="checkbox" id="autoHighlightToggle" checked>
+            <span class="toggle-slider-small"></span>
+          </label>
+          <label class="master-toggle" title="Enable highlighting">
+            <input type="checkbox" id="masterToggle" checked>
+            <span class="toggle-slider"></span>
+          </label>
+        </div>
       </div>
     </header>
 
