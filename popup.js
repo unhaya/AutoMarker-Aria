@@ -1,5 +1,131 @@
 // AutoMarker Aria v5.5 - Pre-Search Intelligence
 
+const PRESETS = {
+  default: `Theme: "\${theme}"
+
+Output language: SAME as theme.
+
+JSON only:
+{"keywords":["L1b","L2a","L2b","L3a","L3b","L4a","L4b"],"negatives":["n1","n2","n3","n4","n5"]}
+
+NOTE: User's theme is auto-placed in L1a. Generate 7 keywords for L1b-L4b.
+
+keywords (7 slots):
+- L1b: Core synonym of theme
+- L2a-L2b: Evidence — Data, research, proof that validates quality content.
+- L3a-L3b: Signals — Quality indicators (white paper, guide, analysis). For deep research.
+- L4a-L4b: Related — Adjacent concepts. For comprehensive exploration.
+
+negatives (5): Words on JUNK pages. Always: Amazon, 楽天, shop, buy, 通販. Add domain noise.
+
+No minus signs. No markdown. JSON only.`,
+
+  academic: `Theme: "\${theme}"
+
+Output language: SAME as theme.
+
+JSON only:
+{"keywords":["L1b","L2a","L2b","L3a","L3b","L4a","L4b"],"negatives":["n1","n2","n3","n4","n5"]}
+
+GOAL: Find primary sources, peer-reviewed papers, official reports. Avoid "matome" sites and shallow summaries.
+
+NOTE: User's theme is auto-placed in L1a. Generate 7 keywords for L1b-L4b.
+
+keywords (7 slots):
+- L1b: Academic synonym (論文, research, study)
+- L2a-L2b: Evidence — Empirical proof (data, findings, results, 実験)
+- L3a-L3b: Signals — Quality markers (peer-reviewed, journal, 学会, .edu, .gov)
+- L4a-L4b: Related — Adjacent research fields
+
+negatives (5): まとめ, NAVERまとめ, アフィリエイト, PR, sponsored, blog
+
+No minus signs. No markdown. JSON only.`,
+
+  technical: `Theme: "\${theme}"
+
+Output language: SAME as theme.
+
+JSON only:
+{"keywords":["L1b","L2a","L2b","L3a","L3b","L4a","L4b"],"negatives":["n1","n2","n3","n4","n5"]}
+
+GOAL: Find official docs, GitHub issues, Stack Overflow deep discussions. Avoid outdated tutorials.
+
+NOTE: User's theme is auto-placed in L1a. Generate 7 keywords for L1b-L4b.
+
+keywords (7 slots):
+- L1b: Technical term (API, implementation, 実装)
+- L2a-L2b: Evidence — Implementation data (example, config, error, debug)
+- L3a-L3b: Signals — Quality sources (official docs, GitHub, Stack Overflow)
+- L4a-L4b: Related — Alternative libraries, related tools
+
+negatives (5): Qiita初心者, 入門, tutorial 2020, outdated, deprecated
+
+No minus signs. No markdown. JSON only.`,
+
+  trends: `Theme: "\${theme}"
+
+Output language: SAME as theme.
+
+JSON only:
+{"keywords":["L1b","L2a","L2b","L3a","L3b","L4a","L4b"],"negatives":["n1","n2","n3","n4","n5"]}
+
+GOAL: Find fresh market analysis, forecasts, roadmaps. Prioritize 2025/2026 content.
+
+NOTE: User's theme is auto-placed in L1a. Generate 7 keywords for L1b-L4b.
+
+keywords (7 slots):
+- L1b: Year indicator (2025, 2026, latest)
+- L2a-L2b: Evidence — Trend data (forecast, 予測, growth, market size)
+- L3a-L3b: Signals — Quality sources (Gartner, IDC, analyst report, 調査レポート)
+- L4a-L4b: Related — Adjacent markets, emerging players
+
+negatives (5): 2020, 2021, 2022, outdated, 古い
+
+No minus signs. No markdown. JSON only.`,
+
+  comparison: `Theme: "\${theme}"
+
+Output language: SAME as theme.
+
+JSON only:
+{"keywords":["L1b","L2a","L2b","L3a","L3b","L4a","L4b"],"negatives":["n1","n2","n3","n4","n5"]}
+
+GOAL: Find honest comparisons, limitations, real user complaints. Avoid affiliate "best X" lists.
+
+NOTE: User's theme is auto-placed in L1a. Generate 7 keywords for L1b-L4b.
+
+keywords (7 slots):
+- L1b: Comparison term (vs, 比較, alternative)
+- L2a-L2b: Evidence — Honest assessment (limitation, デメリット, cons, 欠点)
+- L3a-L3b: Signals — Quality reviews (Reddit, 本音, real user, long-term review)
+- L4a-L4b: Related — Competitors, alternatives, migration
+
+negatives (5): おすすめ, best, ランキング, affiliate, PR
+
+No minus signs. No markdown. JSON only.`,
+
+  concepts: `Theme: "\${theme}"
+
+Output language: SAME as theme.
+
+JSON only:
+{"keywords":["L1b","L2a","L2b","L3a","L3b","L4a","L4b"],"negatives":["n1","n2","n3","n4","n5"]}
+
+GOAL: Understand fundamentals accurately. Find clear explanations with diagrams. Avoid SEO-optimized shallow content.
+
+NOTE: User's theme is auto-placed in L1a. Generate 7 keywords for L1b-L4b.
+
+keywords (7 slots):
+- L1b: Definition term (とは, what is, 意味, definition)
+- L2a-L2b: Evidence — Explanatory content (仕組み, how it works, 図解, diagram)
+- L3a-L3b: Signals — Quality sources (Wikipedia, 公式, official, textbook)
+- L4a-L4b: Related — Related concepts, prerequisites, next topics
+
+negatives (5): いかがでしたか, まとめサイト, コピペ, 3分でわかる, 簡単
+
+No minus signs. No markdown. JSON only.`
+};
+
 class AutoMarkerPopup {
   constructor() {
     this.apiConfig = null;
@@ -30,6 +156,9 @@ class AutoMarkerPopup {
     this.negativesSection = document.getElementById('negativesSection');
     this.negativesList = document.getElementById('negativesList');
     this.useNegativesInSearch = document.getElementById('useNegativesInSearch');
+
+    // Preset select
+    this.presetSelect = document.getElementById('presetSelect');
   }
 
   bindEvents() {
@@ -61,6 +190,11 @@ class AutoMarkerPopup {
 
     // Negatives toggle
     this.useNegativesInSearch.addEventListener('change', () => {
+      this.saveSettings();
+    });
+
+    // Preset select
+    this.presetSelect.addEventListener('change', () => {
       this.saveSettings();
     });
 
@@ -138,6 +272,11 @@ class AutoMarkerPopup {
     if (settings.useNegativesInSearch !== undefined) {
       this.useNegativesInSearch.checked = settings.useNegativesInSearch;
     }
+
+    // Load preset (default: 'default')
+    if (settings.preset) {
+      this.presetSelect.value = settings.preset;
+    }
   }
 
   async saveSettings() {
@@ -154,7 +293,8 @@ class AutoMarkerPopup {
         slots,
         enabled: this.masterToggle.checked,
         negatives: this.negatives,
-        useNegativesInSearch: this.useNegativesInSearch.checked
+        useNegativesInSearch: this.useNegativesInSearch.checked,
+        preset: this.presetSelect.value
       }
     });
   }
@@ -215,11 +355,17 @@ class AutoMarkerPopup {
       console.log('AI Build result:', result);
 
       if (result && result.keywords?.length > 0) {
-        const keywords = result.keywords.slice(0, 8);
+        // Check if extended slots (L3-L4) are visible
+        const isExpanded = !this.extendedSlots.classList.contains('hidden');
+        const maxAiKeywords = isExpanded ? 7 : 3;
+
+        // User theme goes to slot 0 (highest priority), AI keywords fill remaining slots
+        const aiKeywords = result.keywords.slice(0, maxAiKeywords);
+        const allKeywords = [theme, ...aiKeywords];
         const negatives = result.negatives || [];
 
-        // 1. Fill slots with keywords
-        this.fillSlotsFromKeywords(keywords);
+        // 1. Fill slots with theme + AI keywords
+        this.fillSlotsFromKeywords(allKeywords);
 
         // 2. Store negatives
         if (negatives.length > 0) {
@@ -231,7 +377,7 @@ class AutoMarkerPopup {
         const slotsToSave = [];
         this.slots.forEach((slot, index) => {
           slotsToSave.push({
-            keyword: keywords[index] || '',
+            keyword: allKeywords[index] || '',
             color: slot.querySelector('.color-picker').value
           });
         });
@@ -245,8 +391,8 @@ class AutoMarkerPopup {
         console.log('Saving AI Build settings:', settingsToSave);
         await chrome.storage.local.set({ automarker_settings: settingsToSave });
 
-        // 4. Build search query: first 4 keywords + negatives (if enabled)
-        const queryKeywords = keywords.slice(0, 4);
+        // 4. Build search query: theme (必須) + L1b~L2b (slots 1-3) + negatives (if enabled)
+        const queryKeywords = [theme, ...allKeywords.slice(1, 4)];
         let searchQuery;
         if (this.useNegativesInSearch.checked) {
           const negativeTerms = negatives.map(n => {
@@ -281,9 +427,21 @@ class AutoMarkerPopup {
   async callHaikuForStrategy(theme) {
     const { provider, apiKey, model } = this.apiConfig;
 
-    // Load custom prompt from storage, or use default
-    const data = await chrome.storage.local.get(['automarker_prompt']);
-    let promptTemplate = data.automarker_prompt || this.getDefaultPrompt();
+    // Check if extended slots (L3-L4) are visible
+    const isExpanded = !this.extendedSlots.classList.contains('hidden');
+
+    // Use selected preset as prompt template
+    const selectedPreset = this.presetSelect.value || 'default';
+    let promptTemplate = PRESETS[selectedPreset] || PRESETS.default;
+
+    // If not expanded, modify prompt to generate only 3 keywords (L1b, L2a, L2b)
+    if (!isExpanded) {
+      promptTemplate = promptTemplate
+        .replace(/\["L1b","L2a","L2b","L3a","L3b","L4a","L4b"\]/g, '["L1b","L2a","L2b"]')
+        .replace(/keywords \(7 slots\):/g, 'keywords (3 slots):')
+        .replace(/- L3a-L3b:.*\n/g, '')
+        .replace(/- L4a-L4b:.*\n/g, '');
+    }
 
     // Replace ${theme} placeholder with actual theme
     const prompt = promptTemplate.replace(/\$\{theme\}/g, theme);
@@ -401,27 +559,6 @@ class AutoMarkerPopup {
     this.negativesList.innerHTML = this.negatives
       .map(word => `<span class="negative-word">${word}</span>`)
       .join('');
-  }
-
-  getDefaultPrompt() {
-    return `Theme: "\${theme}"
-
-Output language: SAME as theme.
-
-JSON only:
-{"keywords":["L1a","L1b","L2a","L2b","L3a","L3b","L4a","L4b"],"negatives":["n1","n2","n3","n4","n5"]}
-
-keywords (8 slots, priority order):
-- L1 (0-1): Core — The theme itself and its synonym. MOST IMPORTANT.
-- L2 (2-3): Evidence — Data, research, proof that validates quality content.
-- L3 (4-5): Signals — Quality indicators (white paper, guide, analysis). For deep research.
-- L4 (6-7): Related — Adjacent concepts. For comprehensive exploration.
-
-Most users only see L1+L2 (4 keywords). L3+L4 appear when expanded for complex research.
-
-negatives (5): Words on JUNK pages. Always: Amazon, 楽天, shop, buy, 通販. Add domain noise.
-
-No minus signs. No markdown. JSON only.`;
   }
 }
 
