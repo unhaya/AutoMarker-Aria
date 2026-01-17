@@ -414,33 +414,36 @@ Return ONLY valid JSON:
   "negatives": ["exclude1", "exclude2", "exclude3", "exclude4", "exclude5"]
 }
 
-KEYWORDS (8 total) - Choose words that ACTUALLY APPEAR in search results:
-- [0-1]: Main theme words + synonym (the words user typed + alternatives)
-- [2-3]: Practical terms people use when discussing this topic
-- [4-5]: Quality signals that appear in good content
-- [6-7]: Related concepts that expand the search
+STEP 1: FRESHNESS & PERSONA ANALYSIS
+- Is "\${theme}" trend-sensitive (tech, news, market) or timeless (principles, theory)?
+- If trend-sensitive: include year like "2025" or "latest" in keywords
+- If timeless: include "wiki", "guide", "fundamentals" type words
+- Who is searching? (engineer → GitHub/docs, executive → case study/ROI, consumer → review/comparison)
+- Add 1-2 keywords that appear on sites this persona trusts
 
-NOTE: If theme contains multiple words, treat them as combined search intent.
-IMPORTANT: Avoid overly academic terms that rarely appear in web content.
+STEP 2: KEYWORDS (8 total)
+Choose words that ACTUALLY APPEAR in quality search results:
+- [0-1]: Core theme + synonym
+- [2-3]: Practical terms real people use
+- [4-5]: Quality signals (white paper, research, analysis, implementation)
+- [6-7]: Freshness/persona keywords from Step 1
 
-NEGATIVES (5 required) - THINK DEEPLY about this specific theme:
+NOTE: Multiple words = combined intent. Avoid academic jargon.
 
-Step 1: What does someone searching "\${theme}" ACTUALLY want?
-- Academic research? Technical documentation? Professional insights?
+STEP 3: NEGATIVES (5 required)
+What SPECIFIC noise pollutes "\${theme}" results?
+- EC sites dominating results
+- Adjacent but irrelevant fields sharing terminology
+- Job/career content (listings, salary, interview)
+- Wrong depth (beginner tutorials vs advanced research)
+- Noisy platforms (YouTube, TikTok, Pinterest)
 
-Step 2: What SPECIFIC noise will pollute "\${theme}" search results?
-- Product categories that dominate results (furniture, gadgets, tools)
-- Adjacent but irrelevant fields that share terminology
-- Career/job content (job listings, salary, interview)
-- Tutorial/beginner content if user wants advanced info
-- Specific platforms that add noise (YouTube, TikTok, Pinterest)
-
-ALWAYS INCLUDE these EC/shopping site exclusions (without minus sign, just the word):
+ALWAYS INCLUDE EC exclusions (without minus sign):
 - Japanese: Amazon, 楽天, Yahoo!ショッピング, 価格.com, 通販
 - English: Amazon, eBay, Walmart, shop, buy
 
-The goal: Remove EC noise + predict what SPECIFICALLY pollutes "\${theme}" results.
-IMPORTANT: Return words WITHOUT minus signs. The system adds them automatically.`;
+IMPORTANT: Return words WITHOUT minus signs. System adds them automatically.
+Ensure output is strictly valid JSON. No text before or after the JSON block.`;
   }
 }
 
