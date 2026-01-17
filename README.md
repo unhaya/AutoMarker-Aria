@@ -1,6 +1,19 @@
 # AutoMarker Aria
 
-AI generates search keywords → Keywords highlighted on search results
+**AI prepares your weapons. You do the hunting.**
+
+## Why This Exists
+
+When exploring unfamiliar territory, you don't know what noise to filter out.
+
+Search "ergonomics" → Amazon chairs, Rakuten desks, job listings flood your results. You didn't know to exclude them because you're new to the field.
+
+**Perplexity approach**: AI searches for you, gives you answers.
+**Aria approach**: AI builds your search strategy, you explore and judge.
+
+The difference matters. AI can predict noise in domains it knows. But discovery—finding unexpected connections, questioning sources, building understanding—that's human work.
+
+This tool lets AI do what it's good at (predicting junk), so you can do what you're good at (thinking).
 
 ## Demo
 
@@ -8,13 +21,8 @@ https://github.com/user-attachments/assets/fb6a90f3-45d1-4468-a895-e876f8944121
 
 ## What It Does
 
-Search "ergonomics" and you get Amazon chairs, Rakuten desks, job listings everywhere.
-
-This tool plans before you search:
-- Keywords to highlight (4 tiers, up to 8)
-- Noise to exclude (-Amazon -Rakuten -jobs etc.)
-
-Result: Search results without EC spam, with important keywords color-coded.
+1. **AI generates**: Keywords to highlight + Noise to exclude
+2. **You search**: Clean results with important terms color-coded
 
 ## Install
 
