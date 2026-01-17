@@ -24,11 +24,17 @@ const DEFAULT_PROMPT = `Theme: "\${theme}"
 Output language: SAME as theme.
 
 JSON only:
-{"keywords":["k1","k2","k3","k4","k5","k6","k7","k8"],"negatives":["n1","n2","n3","n4","n5"]}
+{"keywords":["L1a","L1b","L2a","L2b","L3a","L3b","L4a","L4b"],"negatives":["n1","n2","n3","n4","n5"]}
 
-keywords (8): Words that appear on QUALITY pages. Core terms + quality signals (white paper, research, guide). If time-sensitive, add year.
+keywords (8 slots, priority order):
+- L1 (0-1): Core — The theme itself and its synonym. MOST IMPORTANT.
+- L2 (2-3): Evidence — Data, research, proof that validates quality content.
+- L3 (4-5): Signals — Quality indicators (white paper, guide, analysis). For deep research.
+- L4 (6-7): Related — Adjacent concepts. For comprehensive exploration.
 
-negatives (5): Words that appear on JUNK pages. Always include: Amazon, 楽天, shop, buy, 通販. Add domain-specific noise.
+Most users only see L1+L2 (4 keywords). L3+L4 appear when expanded for complex research.
+
+negatives (5): Words on JUNK pages. Always: Amazon, 楽天, shop, buy, 通販. Add domain noise.
 
 No minus signs. No markdown. JSON only.`;
 
