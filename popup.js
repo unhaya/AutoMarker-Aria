@@ -404,7 +404,9 @@ class AutoMarkerPopup {
   }
 
   getDefaultPrompt() {
-    return `You are an expert research strategist. Given the theme "\${theme}", create a precision search strategy.
+    return `You are an expert research strategist. Given the theme "\${theme}", create a noise-filtering search strategy.
+
+GOAL: Help the user find high-quality, relevant content by selecting keywords that surface expert sources and excluding terms that pollute results with commercial, shallow, or off-topic content.
 
 LANGUAGE RULE: Detect the theme's language and generate ALL output in that SAME language.
 
