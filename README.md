@@ -1,66 +1,66 @@
 # AutoMarker Aria
 
-AIが検索キーワードを生成 → 検索結果でキーワードをカラーハイライト
+AI generates search keywords → Keywords highlighted on search results
 
 ## Demo
 
 https://github.com/user-attachments/assets/fb6a90f3-45d1-4468-a895-e876f8944121
 
-## 何ができるか
+## What It Does
 
-「人間工学」で検索するとAmazonの椅子、楽天のデスク、求人情報ばかり出てくる。
+Search "ergonomics" and you get Amazon chairs, Rakuten desks, job listings everywhere.
 
-このツールは検索前に戦略を立てる:
-- ハイライトするキーワード（4段階、最大8個）
-- 除外するノイズ（-Amazon -楽天 -求人 など）
+This tool plans before you search:
+- Keywords to highlight (4 tiers, up to 8)
+- Noise to exclude (-Amazon -Rakuten -jobs etc.)
 
-結果: ECサイトや求人を除外した検索結果で、重要なキーワードが色分けされる。
+Result: Search results without EC spam, with important keywords color-coded.
 
-## インストール
+## Install
 
-1. [Releases](../../releases)からZIPダウンロード
-2. 解凍
-3. Chrome → `chrome://extensions` → 「デベロッパーモード」ON
-4. 「パッケージ化されていない拡張機能を読み込む」→ 解凍フォルダを選択
+1. Download ZIP from [Releases](../../releases)
+2. Unzip
+3. Chrome → `chrome://extensions` → Enable "Developer mode"
+4. "Load unpacked" → Select the unzipped folder
 
-## 設定
+## Setup
 
-⚙ → APIキーを設定（Claude / OpenAI / Gemini）
+⚙ → Set API key (Claude / OpenAI / Gemini)
 
-カスタムプロンプトはAdvancedセクションで編集可能。
+Custom prompt available in Advanced section.
 
-## 使い方
+## Usage
 
-### AIあり
-1. テーマを入力
-2. AI Buildをクリック
-3. キーワードがハイライトされた検索結果が開く
+### With AI
+1. Enter theme
+2. Click AI Build
+3. Search opens with keywords highlighted
 
-### AIなし
-APIキー不要。スロットにキーワードを直接入力すれば、どのページでもハイライトが適用される。
+### Without AI
+No API key needed. Type keywords directly into slots — highlights work on any page.
 
-## ハイライトレベル
+## Highlight Levels
 
-4色 × 2スロット（計8個）:
+4 colors × 2 slots (8 total):
 
-| レベル | 色 | スロット数 | 用途 |
-|--------|------|----------|------|
-| L1 | 黄 | 2 | コア — テーマの本質 |
-| L2 | ピンク | 2 | エビデンス — 根拠・効果 |
-| L3 | 紫 | 2 | シグナル — 質の指標 |
-| L4 | 緑 | 2 | 関連 — 周辺概念 |
+| Level | Color | Slots | Purpose |
+|-------|-------|-------|---------|
+| L1 | Yellow | 2 | Core — Theme essence |
+| L2 | Pink | 2 | Evidence — Proof & effects |
+| L3 | Purple | 2 | Signals — Quality indicators |
+| L4 | Green | 2 | Related — Peripheral concepts |
 
-色は各スロットで自由に変更可能。除外ワード（-Amazon -楽天 など）はAIが自動生成。
+Colors are customizable per slot. Exclusion words (-Amazon -Rakuten etc.) are AI-generated.
 
-## コスト
+## Cost
 
-| Provider | 1回 | 100回 | 1000回 |
+| Provider | 1x | 100x | 1000x |
 |----------|-----|-------|--------|
 | Claude Haiku | $0.0003 | $0.03 | $0.30 |
 | GPT-4o Mini | $0.0002 | $0.02 | $0.20 |
-| Gemini Flash | 無料枠 | 無料枠 | 無料枠 |
+| Gemini Flash | Free tier | Free tier | Free tier |
 
-Gemini: 無料枠あり（15 RPM、1500 RPD制限）
+Gemini: Free tier available (15 RPM, 1500 RPD limit)
 
 ## License
 
