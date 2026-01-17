@@ -4,7 +4,8 @@ const MODELS = {
   claude: [
     { value: 'claude-3-5-haiku-20241022', label: 'Claude 3.5 Haiku (Fast)' },
     { value: 'claude-sonnet-4-20250514', label: 'Claude Sonnet 4' },
-    { value: 'claude-opus-4-20250514', label: 'Claude Opus 4' }
+    { value: 'claude-opus-4-20250514', label: 'Claude Opus 4' },
+    { value: 'claude-opus-4-5-20251101', label: 'Claude Opus 4.5' }
   ],
   openai: [
     { value: 'gpt-4o-mini', label: 'GPT-4o Mini (Fast)' },

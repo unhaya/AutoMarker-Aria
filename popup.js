@@ -29,6 +29,7 @@ class AutoMarkerPopup {
     this.aiBuildBtn = document.getElementById('aiBuildBtn');
     this.negativesSection = document.getElementById('negativesSection');
     this.negativesList = document.getElementById('negativesList');
+    this.useNegativesInSearch = document.getElementById('useNegativesInSearch');
   }
 
   bindEvents() {
@@ -57,6 +58,11 @@ class AutoMarkerPopup {
 
     // AI Build
     this.aiBuildBtn.addEventListener('click', () => this.aiBuild());
+
+    // Negatives toggle
+    this.useNegativesInSearch.addEventListener('change', () => {
+      this.saveSettings();
+    });
 
     // Enter key in theme input
     this.themeInput.addEventListener('keydown', (e) => {
@@ -127,6 +133,11 @@ class AutoMarkerPopup {
       this.negatives = settings.negatives;
       this.displayNegatives();
     }
+
+    // Load useNegativesInSearch setting (default: true)
+    if (settings.useNegativesInSearch !== undefined) {
+      this.useNegativesInSearch.checked = settings.useNegativesInSearch;
+    }
   }
 
   async saveSettings() {
@@ -142,7 +153,8 @@ class AutoMarkerPopup {
       automarker_settings: {
         slots,
         enabled: this.masterToggle.checked,
-        negatives: this.negatives
+        negatives: this.negatives,
+        useNegativesInSearch: this.useNegativesInSearch.checked
       }
     });
   }
@@ -233,13 +245,18 @@ class AutoMarkerPopup {
         console.log('Saving AI Build settings:', settingsToSave);
         await chrome.storage.local.set({ automarker_settings: settingsToSave });
 
-        // 4. Build search query: first 4 keywords + negatives
+        // 4. Build search query: first 4 keywords + negatives (if enabled)
         const queryKeywords = keywords.slice(0, 4);
-        const negativeTerms = negatives.map(n => {
-          const word = n.replace(/^-+/, ''); // Remove leading minus signs
-          return `-${word}`;
-        });
-        const searchQuery = [...queryKeywords, ...negativeTerms].join(' ');
+        let searchQuery;
+        if (this.useNegativesInSearch.checked) {
+          const negativeTerms = negatives.map(n => {
+            const word = n.replace(/^-+/, ''); // Remove leading minus signs
+            return `-${word}`;
+          });
+          searchQuery = [...queryKeywords, ...negativeTerms].join(' ');
+        } else {
+          searchQuery = queryKeywords.join(' ');
+        }
 
         console.log('Search query:', searchQuery);
 
