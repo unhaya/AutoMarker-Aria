@@ -23,6 +23,8 @@ negatives (5): Think SPECIFICALLY about this theme. What pages appear in search 
 - Outdated: old version numbers, deprecated terms
 Generate 5 negatives that a domain expert would know to avoid for THIS specific theme.
 
+CRITICAL: Negatives must NOT overlap with theme or keywords. Never negate what you're searching FOR.
+
 No minus signs. No markdown. JSON only.`,
 
   academic: `Theme: "\${theme}"
@@ -49,6 +51,8 @@ negatives (5): Think about what pollutes academic searches for THIS theme:
 - Blog posts misinterpreting research
 - Predatory journal indicators for this field
 Generate 5 negatives specific to academic noise in this domain.
+
+CRITICAL: Negatives must NOT overlap with theme or keywords. Never negate what you're searching FOR.
 
 No minus signs. No markdown. JSON only.`,
 
@@ -77,6 +81,8 @@ negatives (5): Think about technical search pollution for THIS specific technolo
 - Common misconceptions or anti-patterns in this domain
 Generate 5 negatives that an experienced developer would filter out.
 
+CRITICAL: Negatives must NOT overlap with theme or keywords. Never negate what you're searching FOR.
+
 No minus signs. No markdown. JSON only.`,
 
   trends: `Theme: "\${theme}"
@@ -103,6 +109,8 @@ negatives (5): Think about what makes trend research outdated or misleading for 
 - Clickbait prediction formats common in this industry
 - News rehashes vs original analysis markers
 Generate 5 negatives to filter stale or superficial trend content.
+
+CRITICAL: Negatives must NOT overlap with theme or keywords. Never negate what you're searching FOR.
 
 No minus signs. No markdown. JSON only.`,
 
@@ -131,6 +139,8 @@ negatives (5): Think about what makes comparison content biased or useless for T
 - Superficial "top 10" formats that lack depth
 Generate 5 negatives to find genuinely honest comparisons.
 
+CRITICAL: Negatives must NOT overlap with theme or keywords. Never negate what you're searching FOR.
+
 No minus signs. No markdown. JSON only.`,
 
   concepts: `Theme: "\${theme}"
@@ -157,6 +167,8 @@ negatives (5): Think about what makes educational content shallow for THIS conce
 - Tangentially related terms that lead to different concepts
 - Content farm patterns in this educational niche
 Generate 5 negatives to find deep, accurate explanations.
+
+CRITICAL: Negatives must NOT overlap with theme or keywords. Never negate what you're searching FOR.
 
 No minus signs. No markdown. JSON only.`
 };

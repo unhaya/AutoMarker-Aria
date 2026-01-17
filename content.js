@@ -9,16 +9,16 @@
   const MARKER_CLASS = 'automarker-hl';
   const NEGATIVE_CLASS = 'automarker-neg';
 
-  // Default colors for auto-highlight (gradient from yellow to green)
+  // Default colors for auto-highlight (each word gets a distinct color)
   const AUTO_HIGHLIGHT_COLORS = [
-    '#ffee58', // Yellow (L1)
-    '#ffee58', // Yellow (L1)
-    '#f48fb1', // Pink (L2)
-    '#f48fb1', // Pink (L2)
-    '#b39ddb', // Purple (L3)
-    '#b39ddb', // Purple (L3)
-    '#a5d6a7', // Green (L4)
-    '#a5d6a7'  // Green (L4)
+    '#ffee58', // Yellow
+    '#f48fb1', // Pink
+    '#b39ddb', // Purple
+    '#a5d6a7', // Green
+    '#ffee58', // Yellow
+    '#f48fb1', // Pink
+    '#b39ddb', // Purple
+    '#a5d6a7'  // Green
   ];
 
   let currentSlots = [];
