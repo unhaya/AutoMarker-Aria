@@ -36,6 +36,8 @@ This isn't an AI that gives you answers. It's one that makes searching feel less
 
 Custom prompt available in Advanced section.
 
+**Privacy**: Your API key is stored locally in Chrome (`chrome.storage.local`) and is only sent to the official AI provider endpoints (api.anthropic.com, api.openai.com, generativelanguage.googleapis.com). No data is collected or sent anywhere else.
+
 ## Usage
 
 ### Auto-Highlight (No Setup Required)
