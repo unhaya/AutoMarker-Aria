@@ -1,0 +1,148 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Privacy Policy | Greenleaf Planning</title>
+  <style>
+    :root {
+      --bg: #1e1e2e;
+      --card: #28283c;
+      --text: #cdd6f4;
+      --muted: #9399b2;
+      --accent: #89b4fa;
+      --border: #313244;
+    }
+    * { box-sizing: border-box; }
+    body {
+      margin: 0;
+      font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, "Helvetica Neue", Arial, "Noto Sans JP", sans-serif;
+      background: var(--bg);
+      color: var(--text);
+      line-height: 1.7;
+    }
+    .wrap {
+      max-width: 760px;
+      margin: 0 auto;
+      padding: 48px 24px 80px;
+    }
+    header {
+      border-bottom: 1px solid var(--border);
+      padding-bottom: 20px;
+      margin-bottom: 32px;
+    }
+    .brand { font-size: 14px; color: var(--accent); letter-spacing: .08em; text-transform: uppercase; }
+    h1 { font-size: 28px; margin: 8px 0 4px; }
+    .updated { font-size: 13px; color: var(--muted); }
+    h2 {
+      font-size: 20px;
+      margin: 40px 0 12px;
+      padding-top: 8px;
+    }
+    section.product {
+      background: var(--card);
+      border: 1px solid var(--border);
+      border-radius: 10px;
+      padding: 20px 24px;
+      margin-top: 24px;
+    }
+    section.product h2 { margin-top: 8px; }
+    ul { padding-left: 22px; }
+    li { margin: 6px 0; }
+    .pill {
+      display: inline-block;
+      background: #313244;
+      color: var(--text);
+      border-radius: 999px;
+      padding: 2px 10px;
+      font-size: 12px;
+      margin-right: 6px;
+    }
+    a { color: var(--accent); }
+    footer {
+      margin-top: 56px;
+      padding-top: 20px;
+      border-top: 1px solid var(--border);
+      font-size: 13px;
+      color: var(--muted);
+    }
+    code { background: #313244; padding: 1px 6px; border-radius: 4px; font-size: 13px; }
+  </style>
+</head>
+<body>
+  <div class="wrap">
+    <header>
+      <div class="brand">Greenleaf Planning</div>
+      <h1>Privacy Policy</h1>
+      <div class="updated">Last updated: June 23, 2026</div>
+    </header>
+
+    <p>
+      This page describes how Greenleaf Planning handles user data across its products and services.
+      Our baseline principle is simple: <strong>we collect as little as possible, and we do not sell or share
+      your data with third parties.</strong>
+    </p>
+
+    <h2>General Principles</h2>
+    <ul>
+      <li>We do not sell, rent, or trade personal data.</li>
+      <li>We collect only what a given product needs to function.</li>
+      <li>Where a product works entirely on your device, no data leaves your device at all.</li>
+      <li>Product-specific details are listed in the sections below.</li>
+    </ul>
+
+    <!-- ============ AutoMarker Aria ============ -->
+    <section class="product" id="automarker">
+      <h2>AutoMarker Aria (Chrome Extension)</h2>
+      <p>
+        <span class="pill">No data collected</span>
+        <span class="pill">No external servers</span>
+        <span class="pill">Runs locally</span>
+      </p>
+
+      <p>
+        AutoMarker Aria is a browser extension that highlights your search words in distinct colors,
+        on search engine results pages and on the pages you visit from them. It is designed to operate
+        <strong>entirely within your browser</strong>.
+      </p>
+
+      <h3 style="margin-top:20px;">What we collect</h3>
+      <p><strong>Nothing.</strong> AutoMarker Aria does not collect, transmit, or store any personal
+      information on any server. There is no account, no login, and no analytics.</p>
+
+      <h3 style="margin-top:20px;">What stays on your device</h3>
+      <ul>
+        <li><strong>Your color preferences (L1–L8)</strong> and the on/off state are saved locally using
+        Chrome's <code>chrome.storage.local</code>. This never leaves your browser.</li>
+        <li><strong>Your most recent search words</strong> are kept locally only so the same words can be
+        highlighted on the pages you open from the results. They are not transmitted anywhere.</li>
+      </ul>
+
+      <h3 style="margin-top:20px;">Permissions and why they are needed</h3>
+      <ul>
+        <li><strong>Host access to all sites (<code>&lt;all_urls&gt;</code>)</strong> — required because the
+        extension highlights your search words on <em>any</em> page you visit from search results. The set of
+        sites cannot be known in advance, so broad host access is necessary for the core feature to work.
+        This access is used solely to read and visually highlight text on the page; page content is never
+        sent off your device.</li>
+        <li><strong>Storage</strong> — to save your color and on/off preferences locally.</li>
+        <li><strong>Tabs / activeTab / scripting</strong> — to re-apply highlighting when you navigate.</li>
+      </ul>
+
+      <h3 style="margin-top:20px;">No third parties</h3>
+      <p>AutoMarker Aria makes no network requests of its own. No data is shared with Greenleaf Planning,
+      Google, or any other party.</p>
+    </section>
+
+    <h2>Contact</h2>
+    <p>
+      Questions about this policy can be sent to the contact address listed on
+      <a href="https://greenleaf-planning.com/">greenleaf-planning.com</a>.
+    </p>
+
+    <footer>
+      © 2026 Greenleaf Planning. This policy may be updated; the date at the top reflects the latest revision.
+    </footer>
+  </div>
+</body>
+</html>
