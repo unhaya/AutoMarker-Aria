@@ -9,112 +9,32 @@
     <header>
       <div class="title-row">
         <h1>AutoMarker</h1>
-        <div class="header-toggles">
-          <label class="auto-hl-toggle" title="Auto-highlight search query words">
-            <span class="toggle-label">Auto</span>
-            <input type="checkbox" id="autoHighlightToggle" checked>
-            <span class="toggle-slider-small"></span>
-          </label>
-          <label class="master-toggle" title="Enable highlighting">
-            <input type="checkbox" id="masterToggle" checked>
-            <span class="toggle-slider"></span>
-          </label>
-        </div>
+        <label class="master-toggle" title="Enable auto-highlight">
+          <input type="checkbox" id="masterToggle" title="Enable auto-highlight" checked>
+          <span class="toggle-slider"></span>
+        </label>
       </div>
     </header>
 
-    <!-- AI Build Section -->
-    <div class="ai-build-section">
-      <input type="text" id="themeInput" class="theme-input" placeholder="Enter theme (e.g. Ergonomics)">
-      <button id="aiBuildBtn" class="ai-build-btn" disabled>
-        <span class="btn-text">AI Build</span>
-        <span class="btn-loader hidden"></span>
-      </button>
-    </div>
-
-    <!-- Strategy Preset -->
-    <div class="preset-row">
-      <select id="presetSelect" class="preset-select">
-        <option value="default">Default</option>
-        <option value="academic">Academic</option>
-        <option value="technical">Technical</option>
-        <option value="trends">Trends</option>
-        <option value="comparison">Comparison</option>
-        <option value="concepts">Concepts</option>
-      </select>
-    </div>
-
-    <!-- 4 Main Slots -->
-    <div class="slots">
-      <div class="slot" data-index="0" data-level="1">
-        <span class="level-tag">L1</span>
-        <input type="color" class="color-picker" value="#ffee58">
-        <input type="text" class="keyword-input" placeholder="Core keyword">
-        <button class="clear-btn" title="Clear">×</button>
+    <!-- L1-L8 color swatches: L1-4 left column, L5-8 right column -->
+    <div class="color-grid">
+      <div class="color-col">
+        <div class="color-row" data-index="0"><span class="level-tag">L1</span><input type="color" class="color-picker" title="L1 color" value="#ffee58"></div>
+        <div class="color-row" data-index="1"><span class="level-tag">L2</span><input type="color" class="color-picker" title="L2 color" value="#f48fb1"></div>
+        <div class="color-row" data-index="2"><span class="level-tag">L3</span><input type="color" class="color-picker" title="L3 color" value="#b39ddb"></div>
+        <div class="color-row" data-index="3"><span class="level-tag">L4</span><input type="color" class="color-picker" title="L4 color" value="#a5d6a7"></div>
       </div>
-      <div class="slot" data-index="1" data-level="1">
-        <span class="level-tag">L1</span>
-        <input type="color" class="color-picker" value="#ffee58">
-        <input type="text" class="keyword-input" placeholder="Core keyword">
-        <button class="clear-btn" title="Clear">×</button>
+      <div class="color-col">
+        <div class="color-row" data-index="4"><span class="level-tag">L5</span><input type="color" class="color-picker" title="L5 color" value="#ffb74d"></div>
+        <div class="color-row" data-index="5"><span class="level-tag">L6</span><input type="color" class="color-picker" title="L6 color" value="#4fc3f7"></div>
+        <div class="color-row" data-index="6"><span class="level-tag">L7</span><input type="color" class="color-picker" title="L7 color" value="#e57373"></div>
+        <div class="color-row" data-index="7"><span class="level-tag">L8</span><input type="color" class="color-picker" title="L8 color" value="#aed581"></div>
       </div>
-      <div class="slot" data-index="2" data-level="2">
-        <span class="level-tag">L2</span>
-        <input type="color" class="color-picker" value="#f48fb1">
-        <input type="text" class="keyword-input" placeholder="Evidence">
-        <button class="clear-btn" title="Clear">×</button>
-      </div>
-      <div class="slot" data-index="3" data-level="2">
-        <span class="level-tag">L2</span>
-        <input type="color" class="color-picker" value="#f48fb1">
-        <input type="text" class="keyword-input" placeholder="Evidence">
-        <button class="clear-btn" title="Clear">×</button>
-      </div>
-    </div>
-
-    <!-- Extended Slots (hidden by default) -->
-    <button id="showMore" class="more-btn">+ More (L3-L4)</button>
-    <div class="slots extended hidden">
-      <div class="slot" data-index="4" data-level="3">
-        <span class="level-tag">L3</span>
-        <input type="color" class="color-picker" value="#b39ddb">
-        <input type="text" class="keyword-input" placeholder="Signals">
-        <button class="clear-btn" title="Clear">×</button>
-      </div>
-      <div class="slot" data-index="5" data-level="3">
-        <span class="level-tag">L3</span>
-        <input type="color" class="color-picker" value="#b39ddb">
-        <input type="text" class="keyword-input" placeholder="Signals">
-        <button class="clear-btn" title="Clear">×</button>
-      </div>
-      <div class="slot" data-index="6" data-level="4">
-        <span class="level-tag">L4</span>
-        <input type="color" class="color-picker" value="#a5d6a7">
-        <input type="text" class="keyword-input" placeholder="Related">
-        <button class="clear-btn" title="Clear">×</button>
-      </div>
-      <div class="slot" data-index="7" data-level="4">
-        <span class="level-tag">L4</span>
-        <input type="color" class="color-picker" value="#a5d6a7">
-        <input type="text" class="keyword-input" placeholder="Related">
-        <button class="clear-btn" title="Clear">×</button>
-      </div>
-    </div>
-
-    <!-- Negatives Section -->
-    <div class="negatives-section hidden" id="negativesSection">
-      <label class="negatives-toggle" title="検索クエリにネガティブワード(-ワード)を含める">
-        <input type="checkbox" id="useNegativesInSearch">
-        <span class="negatives-toggle-slider"></span>
-      </label>
-      <span class="negatives-label">Exclude:</span>
-      <span class="negatives-list" id="negativesList"></span>
     </div>
 
     <!-- Actions -->
     <div class="actions">
-      <button id="clearAll" class="secondary-btn">Clear</button>
-      <button id="openSettings" class="icon-btn" title="Settings">⚙</button>
+      <button id="colorReset" class="secondary-btn">COLOR RESET</button>
     </div>
 
     <!-- Status -->

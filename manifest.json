@@ -1,8 +1,8 @@
 {
   "manifest_version": 3,
   "name": "AutoMarker Aria",
-  "version": "1.0.0",
-  "description": "AI-powered keyword highlighter with pre-search intelligence",
+  "version": "2.0.0",
+  "description": "Auto-highlight your search words in distinct colors (L1-L8). No AI, no setup.",
   "permissions": [
     "activeTab",
     "storage",
@@ -23,7 +23,6 @@
       "128": "icons/icon128.png"
     }
   },
-  "options_page": "options.html",
   "content_scripts": [
     {
       "matches": ["<all_urls>"],

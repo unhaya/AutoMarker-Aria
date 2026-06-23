@@ -9,17 +9,20 @@
   const MARKER_CLASS = 'automarker-hl';
   const NEGATIVE_CLASS = 'automarker-neg';
 
-  // Default colors for auto-highlight (each word gets a distinct color)
-  const AUTO_HIGHLIGHT_COLORS = [
-    '#ffee58', // Yellow
-    '#f48fb1', // Pink
-    '#b39ddb', // Purple
-    '#a5d6a7', // Green
-    '#ffee58', // Yellow
-    '#f48fb1', // Pink
-    '#b39ddb', // Purple
-    '#a5d6a7'  // Green
+  // Default colors L1-L8 (each search word gets a distinct color, up to 8)
+  const DEFAULT_COLORS = [
+    '#ffee58', // L1 Yellow
+    '#f48fb1', // L2 Pink
+    '#b39ddb', // L3 Purple
+    '#a5d6a7', // L4 Green
+    '#ffb74d', // L5 Orange
+    '#4fc3f7', // L6 Sky
+    '#e57373', // L7 Red
+    '#aed581'  // L8 Lime
   ];
+
+  // Active colors (overridden by user settings from chrome.storage)
+  let activeColors = DEFAULT_COLORS.slice();
 
   let currentSlots = [];
   let currentNegatives = [];
@@ -28,18 +31,9 @@
 
   // Listen for messages from background/popup
   chrome.runtime.onMessage.addListener((message, sender, sendResponse) => {
-    if (message.action === 'highlight') {
-      currentSlots = message.data.slots || [];
-      currentNegatives = message.data.negatives || [];
-      isEnabled = message.data.enabled;
-
-      if (isEnabled && (currentSlots.length > 0 || currentNegatives.length > 0)) {
-        const count = highlightPage();
-        sendResponse({ matchCount: count });
-      } else {
-        removeAllHighlights();
-        sendResponse({ matchCount: 0 });
-      }
+    if (message.action === 'rehighlight') {
+      // Re-read state from storage and re-run auto-highlight
+      reloadAndHighlight().then(count => sendResponse({ matchCount: count }));
       return true;
     }
 
@@ -86,36 +80,18 @@
   let autoHighlightKeywords = [];
   let autoHighlightSlots = []; // Keep auto slots for MutationObserver
 
-  // Clear AI Build settings when new search is detected
-  // Sends message to background.js which clears storage (works even when popup is closed)
-  async function clearAiBuildSettings() {
-    try {
-      // Send clearAll to background.js (same as popup's Clear button)
-      await chrome.runtime.sendMessage({ action: 'clearAll' });
-      currentSlots = [];
-      currentNegatives = [];
-    } catch (e) {
-      // Extension context invalidated
-    }
-  }
-
   // Auto-highlight search query words
   async function autoHighlightSearchQuery() {
     if (!autoHighlightEnabled) return;
 
     let words = [];
 
-    // On search pages, extract query and save it
+    // On search pages, extract query and save it for use on visited pages
     if (isSearchPage()) {
       const query = getSearchQuery();
       words = parseSearchQueryWords(query);
 
       if (words.length > 0) {
-        // New search detected: always clear AI Build settings to allow auto-highlight
-        // This ensures fresh searches use auto-highlight, not stale AI Build keywords
-        await clearAiBuildSettings();
-
-        // Save auto-highlight keywords to storage for use on visited pages
         autoHighlightKeywords = words;
         try {
           await chrome.storage.local.set({ automarker_auto_keywords: words });
@@ -124,22 +100,9 @@
         }
       }
     } else {
-      // On non-search pages, check if we have stored slots (from AI Build via popup)
-      // If so, use those instead of auto-highlight
+      // On non-search pages, reuse the keywords saved from the last search
       try {
-        const data = await chrome.storage.local.get(['automarker_settings', 'automarker_auto_keywords']);
-        const settings = data.automarker_settings || {};
-        const storedSlots = (settings.slots || []).filter(s => s.keyword?.trim());
-
-        if (storedSlots.length > 0) {
-          // AI Build slots exist, use them (skip auto-highlight)
-          currentSlots = storedSlots;
-          currentNegatives = settings.negatives || [];
-          autoHighlightSlots = [];
-          return;
-        }
-
-        // No AI Build slots, use auto-highlight keywords
+        const data = await chrome.storage.local.get(['automarker_auto_keywords']);
         words = data.automarker_auto_keywords || [];
         autoHighlightKeywords = words;
       } catch (e) {
@@ -152,10 +115,10 @@
       return;
     }
 
-    // Create slots from search words with default colors
+    // Create slots from search words with user-configured (or default) L1-L8 colors
     autoHighlightSlots = words.slice(0, 8).map((word, index) => ({
       keyword: word,
-      color: AUTO_HIGHLIGHT_COLORS[index] || AUTO_HIGHLIGHT_COLORS[0]
+      color: activeColors[index] || activeColors[0]
     }));
 
     // Set currentSlots to auto slots for highlighting (including MutationObserver)
@@ -375,46 +338,54 @@
     subtree: true
   });
 
+  // Re-read settings/colors from storage and re-apply (called on background 'rehighlight')
+  async function reloadAndHighlight() {
+    try {
+      const data = await chrome.storage.local.get(['automarker_settings', 'automarker_colors']);
+      const settings = data.automarker_settings || {};
+      applyColors(data.automarker_colors);
+      isEnabled = settings.enabled !== false;
+      autoHighlightEnabled = settings.autoHighlight !== false;
+
+      if (isEnabled && autoHighlightEnabled) {
+        await autoHighlightSearchQuery();
+        return highlightPage();
+      } else {
+        removeAllHighlights();
+        return 0;
+      }
+    } catch (e) {
+      return 0;
+    }
+  }
+
+  // Load L1-L8 colors from storage (fallback to defaults)
+  function applyColors(colors) {
+    if (Array.isArray(colors) && colors.length > 0) {
+      activeColors = DEFAULT_COLORS.map((def, i) => colors[i] || def);
+    } else {
+      activeColors = DEFAULT_COLORS.slice();
+    }
+  }
+
   // Auto-apply on load from storage
   async function init() {
     try {
-      const data = await chrome.storage.local.get(['automarker_settings', 'automarker_auto_keywords']);
+      const data = await chrome.storage.local.get(['automarker_settings', 'automarker_auto_keywords', 'automarker_colors']);
       const settings = data.automarker_settings;
 
-      // Load auto-highlight setting (default: true)
+      // Load colors (L1-L8)
+      applyColors(data.automarker_colors);
+
+      // Master enable (default: true) and auto-highlight (default: true)
+      isEnabled = settings?.enabled !== false;
       autoHighlightEnabled = settings?.autoHighlight !== false;
 
       // Load saved auto-highlight keywords
       autoHighlightKeywords = data.automarker_auto_keywords || [];
 
-      // CRITICAL: On search pages, always clear AI Build slots first
-      // This ensures new searches use auto-highlight, not stale AI Build keywords
-      if (isSearchPage() && autoHighlightEnabled) {
-        const query = getSearchQuery();
-        if (query) {
-          await clearAiBuildSettings();
-          // After clearing, run auto-highlight
-          autoHighlightSearchQuery();
-          setTimeout(() => autoHighlightSearchQuery(), 800);
-          setTimeout(() => autoHighlightSearchQuery(), 2000);
-          return; // Skip loading old slots
-        }
-      }
-
-      if (settings?.enabled) {
-        currentSlots = (settings.slots || []).filter(s => s.keyword?.trim());
-        currentNegatives = settings.negatives || [];
-
-        if (currentSlots.length > 0 || currentNegatives.length > 0) {
-          // Multiple passes for dynamic content (Google loads results progressively)
-          highlightPage();
-          setTimeout(() => highlightPage(), 800);
-          setTimeout(() => highlightPage(), 2000);
-        }
-      }
-
-      // Auto-highlight search query if no manual slots and feature is enabled
-      if (autoHighlightEnabled && currentSlots.length === 0) {
+      if (isEnabled && autoHighlightEnabled) {
+        // Multiple passes for dynamic content (Google loads results progressively)
         autoHighlightSearchQuery();
         setTimeout(() => autoHighlightSearchQuery(), 800);
         setTimeout(() => autoHighlightSearchQuery(), 2000);
@@ -424,35 +395,26 @@
     }
   }
 
-  // Listen for storage changes (handles AI Build scenario)
+  // Listen for storage changes (toggle / color updates from popup)
   chrome.storage.onChanged.addListener((changes, namespace) => {
-    if (namespace !== 'local' || !changes.automarker_settings) return;
+    if (namespace !== 'local') return;
 
-    const settings = changes.automarker_settings.newValue;
+    if (changes.automarker_colors) {
+      applyColors(changes.automarker_colors.newValue);
+    }
 
-    // Update auto-highlight setting
-    autoHighlightEnabled = settings?.autoHighlight !== false;
+    if (changes.automarker_settings) {
+      const settings = changes.automarker_settings.newValue || {};
+      isEnabled = settings.enabled !== false;
+      autoHighlightEnabled = settings.autoHighlight !== false;
+    }
 
-    if (settings?.enabled) {
-      currentSlots = (settings.slots || []).filter(s => s.keyword?.trim());
-      currentNegatives = settings.negatives || [];
-
-      if (currentSlots.length > 0 || currentNegatives.length > 0) {
-        highlightPage();
-        setTimeout(() => highlightPage(), 800);
-        setTimeout(() => highlightPage(), 2000);
-      } else if (autoHighlightEnabled) {
-        // No manual slots, try auto-highlight
-        autoHighlightSearchQuery();
-        setTimeout(() => autoHighlightSearchQuery(), 800);
-      }
+    // Re-render based on current state
+    if (isEnabled && autoHighlightEnabled) {
+      autoHighlightSearchQuery();
+      setTimeout(() => autoHighlightSearchQuery(), 800);
     } else {
       removeAllHighlights();
-      // If master toggle is off but auto-highlight is on, still highlight search query
-      if (autoHighlightEnabled) {
-        autoHighlightSearchQuery();
-        setTimeout(() => autoHighlightSearchQuery(), 800);
-      }
     }
   });
 
