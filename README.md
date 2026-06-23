@@ -4,8 +4,9 @@
 
 Search the web and every word in your query lights up in its own color — right on the results page, and on the pages you click through to.
 
-<!-- Screenshot -->
-<!-- ![AutoMarker Aria](docs/screenshot.png) -->
+<p align="center">
+  <img src="GitHub_Screenshot.jpg" alt="AutoMarker Aria popup — L1-L8 color pickers, Auto toggle, COLOR RESET" width="320">
+</p>
 
 ## What it does
 
