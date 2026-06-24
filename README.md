@@ -15,6 +15,12 @@ Search the web and every word in your query lights up in its own color — right
 - **Follows you through** — highlights stay on the pages you open from the results.
 - **Works on** Google, Bing, Yahoo, DuckDuckGo, Baidu, and with infinite-scroll pages.
 
+<p align="center">
+  <img src="review-screenshot.png" alt="AutoMarker Aria highlighting the search words apple, banana, grape in distinct colors across a Google results page" width="720">
+</p>
+
+<p align="center"><em>Searching <code>apple banana grape</code> — each word lights up in its own color, right on the results page.</em></p>
+
 ## Popup controls
 
 - **Auto toggle** — turn highlighting on or off.
