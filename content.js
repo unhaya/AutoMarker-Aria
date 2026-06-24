@@ -56,11 +56,11 @@
   function parseSearchQueryWords(query) {
     if (!query) return [];
 
-    // Split by spaces, filter out negative terms (starting with -)
-    const words = query.split(/\s+/).filter(word => {
-      const trimmed = word.trim();
-      return trimmed && !trimmed.startsWith('-');
-    });
+    // Split by spaces, strip surrounding quotes, filter out negative terms (starting with -)
+    // クオート除去: "AI 検索" → AI / 検索 を個別にハイライト（クオート混入で非マッチになるバグ対策 2026-06-25）
+    const words = query.split(/\s+/)
+      .map(word => word.replace(/^["']|["']$/g, '').trim())
+      .filter(word => word && !word.startsWith('-'));
 
     // Remove duplicates
     return [...new Set(words)];
@@ -279,8 +279,7 @@
         span.className = MARKER_CLASS;
         span.style.backgroundColor = hexToRgba(match.color, 0.4);
         span.style.borderRadius = '2px';
-        span.style.padding = '1px 2px';
-        span.style.margin = '0 1px';
+        // padding/margin はテキスト選択を分断するため付けない（選択不可バグ対策 2026-06-25）
       } else {
         // Negative: de-emphasize with strikethrough and low opacity
         span.className = NEGATIVE_CLASS;

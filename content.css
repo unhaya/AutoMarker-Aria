@@ -2,7 +2,7 @@
 
 .automarker-highlight {
   border-radius: 2px;
-  padding: 0 1px;
+  /* padding はテキスト選択を分断するため付けない（選択不可バグ対策 2026-06-25） */
   transition: background-color 0.2s ease;
 }
 
