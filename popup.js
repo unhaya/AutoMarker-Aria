@@ -15,11 +15,12 @@ const DEFAULT_COLORS = [
 class Popup {
   constructor() {
     this.masterToggle = document.getElementById('masterToggle');
+    this.manualKeywords = document.getElementById('manualKeywords');
+    this.manualClear = document.getElementById('manualClear');
     this.colorPickers = Array.from(document.querySelectorAll('.color-picker'));
     this.colorReset = document.getElementById('colorReset');
-
     this.colors = DEFAULT_COLORS.slice();
-
+    this.tabId = null;
     this.bindEvents();
     this.load();
   }
@@ -27,6 +28,16 @@ class Popup {
   bindEvents() {
     // Master ON/OFF
     this.masterToggle.addEventListener('change', () => this.saveSettings());
+
+    // 手動キーワード入力（Enterまたはfocusout時に反映）
+    this.manualKeywords.addEventListener('keydown', (e) => {
+      if (e.key === 'Enter') { e.preventDefault(); this.saveManualKeywords(); }
+    });
+    this.manualKeywords.addEventListener('blur', () => this.saveManualKeywords());
+    this.manualClear.addEventListener('click', () => {
+      this.manualKeywords.value = '';
+      this.saveManualKeywords();
+    });
 
     // Color pickers (L1-L8)
     this.colorPickers.forEach((picker, index) => {
@@ -46,16 +57,36 @@ class Popup {
 
   async load() {
     try {
-      const data = await chrome.storage.local.get(['automarker_settings', 'automarker_colors']);
+      // 現在のタブIDを取得
+      const [tab] = await chrome.tabs.query({ active: true, currentWindow: true });
+      this.tabId = tab?.id || null;
+      const manualKey = this.tabId ? `automarker_manual_tab_${this.tabId}` : 'automarker_manual_keywords';
+
+      const data = await chrome.storage.local.get(['automarker_settings', 'automarker_colors', manualKey]);
       const settings = data.automarker_settings || {};
 
       // Master enable (default ON)
       this.masterToggle.checked = settings.enabled !== false;
 
+      // 手動キーワード復元（タブ別）
+      const manual = data[manualKey] || [];
+      this.manualKeywords.value = manual.join(' ');
+
       // Colors (fallback to defaults per-slot)
       const stored = Array.isArray(data.automarker_colors) ? data.automarker_colors : [];
       this.colors = DEFAULT_COLORS.map((def, i) => stored[i] || def);
       this.colorPickers.forEach((picker, i) => { picker.value = this.colors[i]; });
+    } catch (e) {
+      // ignore
+    }
+  }
+
+  async saveManualKeywords() {
+    const words = this.manualKeywords.value.trim().split(/\s+/).filter(Boolean);
+    const manualKey = this.tabId ? `automarker_manual_tab_${this.tabId}` : 'automarker_manual_keywords';
+    try {
+      await chrome.storage.local.set({ [manualKey]: words });
+      if (this.tabId) chrome.tabs.sendMessage(this.tabId, { action: 'rehighlight' }).catch(() => {});
     } catch (e) {
       // ignore
     }

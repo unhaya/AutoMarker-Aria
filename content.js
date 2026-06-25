@@ -99,6 +99,21 @@
   async function autoHighlightSearchQuery() {
     if (!autoHighlightEnabled) return;
 
+    // 手動キーワードが入力されていれば優先（タブ別）
+    try {
+      const manualKey = tabKey ? `automarker_manual_tab_${tabKey.replace('automarker_tab_', '')}` : null;
+      const cfg = manualKey ? await chrome.storage.local.get([manualKey]) : {};
+      const manual = (manualKey ? cfg[manualKey] : null) || [];
+      if (manual.length > 0) {
+        autoHighlightSlots = manual.slice(0, 8).map((word, i) => ({
+          keyword: word,
+          color: activeColors[i] || activeColors[0]
+        }));
+        currentSlots = autoHighlightSlots;
+        return;
+      }
+    } catch (e) { /* ignore */ }
+
     let words = [];
 
     // On search pages, extract query and save it for use on visited pages

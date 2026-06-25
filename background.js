@@ -24,8 +24,10 @@ chrome.runtime.onMessage.addListener((message, sender, sendResponse) => {
 
 // タブが閉じたらそのタブのキーワードをstorageから削除
 chrome.tabs.onRemoved.addListener(async (tabId) => {
-  const key = `automarker_tab_${tabId}`;
-  await chrome.storage.local.remove(key);
+  await chrome.storage.local.remove([
+    `automarker_tab_${tabId}`,
+    `automarker_manual_tab_${tabId}`,
+  ]);
 });
 
 // ナビゲーション完了時にnudge
