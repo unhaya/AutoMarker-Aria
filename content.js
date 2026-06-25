@@ -69,16 +69,31 @@
   // Check if current page is a search results page
   function isSearchPage() {
     const hostname = location.hostname;
-    return hostname.includes('google.') ||
-           hostname.includes('bing.') ||
-           hostname.includes('yahoo.') ||
-           hostname.includes('duckduckgo.') ||
-           hostname.includes('search.');
+    const path = location.pathname;
+    if (hostname.includes('google.') && path.startsWith('/search')) return true;
+    if (hostname.includes('bing.') && path.startsWith('/search')) return true;
+    if (hostname === 'search.yahoo.co.jp' || hostname === 'search.yahoo.com') return true;
+    if (hostname.includes('duckduckgo.')) return true;
+    if (hostname === 'www.baidu.com' && path.startsWith('/s')) return true;
+    if (hostname.includes('yandex.') && path.startsWith('/search')) return true;
+    if (hostname.startsWith('search.')) return true;
+    return false;
   }
 
-  // Store auto-highlight keywords for persistence across pages
+  // Store auto-highlight keywords for persistence across pages (per-tab)
   let autoHighlightKeywords = [];
   let autoHighlightSlots = []; // Keep auto slots for MutationObserver
+  let tabKey = null; // automarker_tab_{tabId}
+
+  // タブIDを取得してtabKeyを初期化
+  async function initTabKey() {
+    try {
+      const resp = await chrome.runtime.sendMessage({ action: 'getTabId' });
+      if (resp?.tabId) tabKey = `automarker_tab_${resp.tabId}`;
+    } catch (e) {
+      // fallback: タブIDなしでもメモリ上のキーワードは使える
+    }
+  }
 
   // Auto-highlight search query words
   async function autoHighlightSearchQuery() {
@@ -94,16 +109,22 @@
       if (words.length > 0) {
         autoHighlightKeywords = words;
         try {
-          await chrome.storage.local.set({ automarker_auto_keywords: words });
+          if (tabKey) await chrome.storage.local.set({ [tabKey]: words });
         } catch (e) {
           // Extension context invalidated
         }
       }
     } else {
-      // On non-search pages, reuse the keywords saved from the last search
+      // On non-search pages, reuse the keywords saved for this tab
       try {
-        const data = await chrome.storage.local.get(['automarker_auto_keywords']);
-        words = data.automarker_auto_keywords || [];
+        if (tabKey) {
+          const data = await chrome.storage.local.get([tabKey]);
+          words = data[tabKey] || [];
+        }
+        // メモリにあればそちらを優先（同タブ内ナビゲーション）
+        if (words.length === 0 && autoHighlightKeywords.length > 0) {
+          words = autoHighlightKeywords;
+        }
         autoHighlightKeywords = words;
       } catch (e) {
         // Extension context invalidated
@@ -342,6 +363,7 @@
   // Re-read settings/colors from storage and re-apply (called on background 'rehighlight')
   async function reloadAndHighlight() {
     try {
+      if (!tabKey) await initTabKey();
       const data = await chrome.storage.local.get(['automarker_settings', 'automarker_colors']);
       const settings = data.automarker_settings || {};
       applyColors(data.automarker_colors);
@@ -372,7 +394,8 @@
   // Auto-apply on load from storage
   async function init() {
     try {
-      const data = await chrome.storage.local.get(['automarker_settings', 'automarker_auto_keywords', 'automarker_colors']);
+      await initTabKey();
+      const data = await chrome.storage.local.get(['automarker_settings', 'automarker_colors']);
       const settings = data.automarker_settings;
 
       // Load colors (L1-L8)
@@ -381,9 +404,6 @@
       // Master enable (default: true) and auto-highlight (default: true)
       isEnabled = settings?.enabled !== false;
       autoHighlightEnabled = settings?.autoHighlight !== false;
-
-      // Load saved auto-highlight keywords
-      autoHighlightKeywords = data.automarker_auto_keywords || [];
 
       if (isEnabled && autoHighlightEnabled) {
         // Multiple passes for dynamic content (Google loads results progressively)

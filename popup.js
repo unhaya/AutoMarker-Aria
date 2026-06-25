@@ -17,7 +17,6 @@ class Popup {
     this.masterToggle = document.getElementById('masterToggle');
     this.colorPickers = Array.from(document.querySelectorAll('.color-picker'));
     this.colorReset = document.getElementById('colorReset');
-    this.matchCount = document.getElementById('matchCount');
 
     this.colors = DEFAULT_COLORS.slice();
 
@@ -42,7 +41,6 @@ class Popup {
       this.colors = DEFAULT_COLORS.slice();
       this.colorPickers.forEach((picker, i) => { picker.value = this.colors[i]; });
       this.saveColors();
-      this.setStatus('Colors reset');
     });
   }
 
@@ -58,10 +56,8 @@ class Popup {
       const stored = Array.isArray(data.automarker_colors) ? data.automarker_colors : [];
       this.colors = DEFAULT_COLORS.map((def, i) => stored[i] || def);
       this.colorPickers.forEach((picker, i) => { picker.value = this.colors[i]; });
-
-      this.setStatus(this.masterToggle.checked ? 'On' : 'Off');
     } catch (e) {
-      this.setStatus('Ready');
+      // ignore
     }
   }
 
@@ -71,12 +67,10 @@ class Popup {
       const data = await chrome.storage.local.get(['automarker_settings']);
       const settings = data.automarker_settings || {};
       settings.enabled = enabled;
-      // auto-highlight follows the master toggle in this edition
       settings.autoHighlight = enabled;
       await chrome.storage.local.set({ automarker_settings: settings });
-      this.setStatus(enabled ? 'On' : 'Off');
     } catch (e) {
-      this.setStatus('Error');
+      // ignore
     }
   }
 
@@ -84,12 +78,8 @@ class Popup {
     try {
       await chrome.storage.local.set({ automarker_colors: this.colors });
     } catch (e) {
-      this.setStatus('Error');
+      // ignore
     }
-  }
-
-  setStatus(text) {
-    if (this.matchCount) this.matchCount.textContent = text;
   }
 }
 
