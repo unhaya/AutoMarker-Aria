@@ -323,6 +323,8 @@
     if (hasNewContent) {
       clearTimeout(debounceTimer);
       debounceTimer = setTimeout(() => {
+        // 選択中はスキップ（DOM書き換えで選択が外れるのを防ぐ）
+        if (!window.getSelection().isCollapsed) return;
         // Use auto slots if no manual slots
         if (currentSlots.length === 0 && autoHighlightSlots.length > 0) {
           currentSlots = autoHighlightSlots;
