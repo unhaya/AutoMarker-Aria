@@ -1,4 +1,5 @@
 # AutoMarker Aria
+https://chromewebstore.google.com/detail/alomlogcglnhgpphpdjpmopemacbbjld?utm_source=item-share-cb
 
 **Your search words, instantly color-coded. No AI, no setup.**
 
