@@ -147,7 +147,13 @@
     }
 
     if (words.length === 0) {
+      // 塗る語が無くなった＝現用リストも空にして、残っている色を実際に剥がす。
+      // autoHighlightSlots だけ空にして return していたため、currentSlots に
+      // 消した手動キーワードが残り続け、塗り直しのたびに復活していた
+      // （「UIからテキストを消しても色が付き続ける」2026-08-07 はしくん報告）
       autoHighlightSlots = [];
+      currentSlots = [];
+      highlightPage();
       return;
     }
 
