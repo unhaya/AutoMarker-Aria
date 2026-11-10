@@ -647,3 +647,16 @@ h1 {
   background: #45475a;
   box-shadow: 0 4px 12px rgba(0, 0, 0, .45);
 }
+/* ⠿: 動かせる事を知らせる目印。つかめる範囲はカード全体のまま */
+.color-row { gap: 6px; padding-left: 4px; }
+.color-row .grip {
+  flex: 0 0 auto;
+  width: 12px;
+  text-align: center;
+  color: #6c7086;
+  font-size: 14px;
+  line-height: 1;
+  cursor: grab;
+}
+.color-row:hover .grip { color: #a6adc8; }
+.color-row.drag-image .grip { color: #cdd6f4; }
