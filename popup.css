@@ -611,3 +611,39 @@ h1 {
   border: 1px solid #45475a;
   border-radius: 4px;
 }
+
+/* === カードの並べ替え（GETMEMO の一覧と同じ感触） === */
+.color-row {
+  position: relative;
+  cursor: grab;
+  -webkit-user-select: none;
+  user-select: none;
+  transition: padding .12s ease;
+}
+.color-row.dragging { opacity: .4; }
+/* 差し込み位置: つかんだカードと同じ高さ（--slot-h）の隙間を、狙った行の上か下に padding で開ける。
+   padding なので指している行はポインタの下に残る */
+.color-row.slot-above { padding-top: calc(var(--slot-h, 38px) + 6px); }
+.color-row.slot-below { padding-bottom: calc(var(--slot-h, 38px) + 6px); }
+.color-row.slot-above::before, .color-row.slot-below::before {
+  content: '';
+  position: absolute;
+  left: 0;
+  right: 0;
+  height: var(--slot-h, 38px);
+  background: #1e1e2e;
+  border: 1px dashed #585b70;
+  border-radius: 6px;
+  pointer-events: none;
+}
+.color-row.slot-above::before { top: 0; }
+.color-row.slot-below::before { bottom: 0; }
+/* 手に持ったカード: つかんだ所を保ってポインタに付いて来る */
+.color-row.drag-image {
+  position: fixed;
+  z-index: 90;
+  pointer-events: none;
+  cursor: grabbing;
+  background: #45475a;
+  box-shadow: 0 4px 12px rgba(0, 0, 0, .45);
+}
